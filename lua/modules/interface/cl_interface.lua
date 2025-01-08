@@ -2,6 +2,7 @@ surface.CreateFont("Logo", {font = "Nunito Black", extended = true, size = Scree
 surface.CreateFont("Hunger", {font = "Nunito Black", extended = true, size = ScreenScale(10)})
 surface.CreateFont("Text", {font = "Nunito Black", extended = true, size = ScreenScale(9)})
 surface.CreateFont("TextShadow", {font = "Nunito Black", extended = true, blursize = 2, size = ScreenScale(9)})
+surface.CreateFont("WatermarkTop", {font = "Nunito Black", extended = true, size = ScreenScale(10)})
 
 local SmoothedHealth = 100
 local SmoothedArmor = 100
@@ -88,7 +89,7 @@ function Interface()
         surface.SetMaterial(mi_hud.icons.interface["license"])
         surface.DrawTexturedRect(pivotlx + ScreenScale(2.7), pivotly - scrh * .17 + ScreenScale(2.7), ScreenScale(7), ScreenScale(7))
 
-        draw.SimpleText("Есть лицензия", "TextShadow", pivotlx + scrw * .0225, pivotly - scrh * .6 + 2, Color(0,0,0, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        draw.SimpleText("Есть лицензия", "TextShadow", pivotlx + scrw * .0225, pivotly - scrh * .155 + 2, Color(0,0,0, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
         draw.SimpleText("Есть лицензия", "Text", pivotlx + scrw * .0225, pivotly - scrh * .155, Color(255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
 
