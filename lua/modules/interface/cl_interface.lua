@@ -1,23 +1,29 @@
+-- Шрифты
 surface.CreateFont("Logo", {font = "Nunito Black", extended = true, size = ScreenScale(12)})
 surface.CreateFont("Hunger", {font = "Nunito Black", extended = true, size = ScreenScale(10)})
 surface.CreateFont("Text", {font = "Nunito Black", extended = true, size = ScreenScale(9)})
 surface.CreateFont("TextShadow", {font = "Nunito Black", extended = true, blursize = 2, size = ScreenScale(9)})
-surface.CreateFont("WatermarkTop", {font = "Nunito Black", extended = true, size = ScreenScale(10)})
+surface.CreateFont("WatermarkTop", {font = "Nunito Black", extended = true, size = ScreenScale(8)})
+surface.CreateFont("WatermarkBottom", {font = "Nunito", extended = true, size = ScreenScale(7)})
 
 local SmoothedHealth = 100
 local SmoothedArmor = 100
 
 function Interface()
-    if not LocalPlayer():Alive() then return end
+    if not LocalPlayer():Alive() then return end -- Если игрок мертв, не отображаем
     local scrw, scrh = ScrW(), ScrH()
 
+    -- Опорная точка
     local pivotlx, pivotly = ScreenScale(4), scrh - ScreenScale(4)
 
+    -- Переменные игрока
     local Player = LocalPlayer()
+    local PSteamID = Player:SteamID()
     local PMaxHealth = Player:GetMaxHealth()
     local PMaxArmor = Player:GetMaxArmor()
     local PHealth = math.Clamp(Player:Health(), 0, PMaxHealth)
     local PArmor = math.Clamp(Player:Armor(), 0, PMaxArmor)
+    local PName = Player:getDarkRPVar("rpname")
     local PMoney = DarkRP.formatMoney(Player:getDarkRPVar("money"))
     local PSalary = DarkRP.formatMoney(Player:getDarkRPVar("salary"))
     local PJob = Player:getDarkRPVar("job")
@@ -28,17 +34,23 @@ function Interface()
     local PHunger = Player:getDarkRPVar("Energy") or 100
     local PArrested = Player:getDarkRPVar("Arrested")
 
-    -- Сглаживание здоровья и брони
+    local PCount = player.GetCount() -- Количество игроков на сервере
+
+    -- Плавная броня и здоровье
     SmoothedHealth = Lerp(FrameTime() * 5, SmoothedHealth, PHealth)
     SmoothedArmor = Lerp(FrameTime() * 5, SmoothedArmor, PArmor)
 
     -- Ширина полосы
     local barWidth = scrw * 0.15
 
+    -- Водяные знаки
+    draw.SimpleText(PCount .. " MILLENIUM RP", "WatermarkTop", scrw * .995, scrh * 0.005, Color(255,255,255, 65), TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+    draw.SimpleText(PName .. " ( " .. PSteamID .. " )", "WatermarkBottom", scrw * .995, scrh * .0225, Color(255,255,255, 65), TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+
     -- Основная панель
     draw.RoundedBox(4, pivotlx, pivotly - scrh * 0.05, scrw * 0.265, scrh * 0.05, Color(35, 35, 50))
 
-    -- Логотип
+    -- Лого
     draw.SimpleText("Mi", "Logo", pivotlx + ScreenScale(5), pivotly - ScreenScale(9.5), color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
     -- Разделитель
@@ -92,11 +104,12 @@ function Interface()
         draw.SimpleText("Есть лицензия", "TextShadow", pivotlx + scrw * .0225, pivotly - scrh * .155 + 2, Color(0,0,0, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
         draw.SimpleText("Есть лицензия", "Text", pivotlx + scrw * .0225, pivotly - scrh * .155, Color(255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
-
 end
 
+-- Хук отрисовки
 hook.Add("HUDPaint", "millenium.interface.draw", Interface)
 
+-- Хук скрытия стандартного интерфейса
 hook.Add("HUDShouldDraw", "HideDefaultHud", function(name)
     if (mi_hud.config.hideHudElements[name]) then
         return false

@@ -4,7 +4,8 @@ mi_hud.config.hideHudElements = {
     ["CHudHealth"] = true,
     ["CHudBattery"] = true,
     ["CHudDeathNotice"] = true,
-    ["CHudDamageIndicator"] = true
+    ["CHudDamageIndicator"] = true,
+    ["CHudCrosshairInfo"] = true
 }
 
 mi_hud.icons = {}
