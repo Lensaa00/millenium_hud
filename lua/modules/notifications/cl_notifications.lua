@@ -1,22 +1,27 @@
-surface.CreateFont("Notification", {font = 'Nunito Bold', extended = true, size = ScreenScale(8)})
+surface.CreateFont("Notification", {font = 'Nunito Bold', extended = true, size = ScreenScale(7)})
 
 local notifications = notifications or {}
 local maxMessages = 4
+
+local function CopyColor(color)
+    return Color(color.r, color.g, color.b, color.a)
+end
 
 function Notification(text, type, length)
     surface.SetFont("Notification")
     if length < 5 then length = 5 end
     local scrw, scrh = ScrW(), ScrH()
     local tw, th = surface.GetTextSize(text)
-    local padding = 10
+    local padding = ScreenScale(3)
 
     local panel = vgui.Create("DPanel")
-    panel:SetSize(tw + padding * 4, ScreenScale(13))
+    panel:SetSize(tw + padding * 4, ScreenScale(12))
     panel:SetPos(scrw - panel:GetWide() - 10, scrh)
     panel:SetAlpha(0)
     panel.Paint = function(me, w, h)
-        draw.RoundedBox(4, 0, 0, w, h, Color(35, 35, 50, 245))
-        draw.RoundedBox(4, 0, 0, scrw * .0015, h, mi_hud.notifTypes[type] or Color(255, 255, 255))
+        draw.RoundedBoxEx(8, 0, 0, w, h, mi_hud.theme.baseOutline, false, false, false, false)
+        draw.RoundedBoxEx(8, 1, 1, w - 2, h - 2, mi_hud.theme.base, false, false, false, false)
+        draw.RoundedBoxEx(8, 0, 0, scrw * .002, h, mi_hud.notifTypes[type] or Color(255, 255, 255), false, false, false, false)
         draw.SimpleText(text, "Notification", w / 2, h / 2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 

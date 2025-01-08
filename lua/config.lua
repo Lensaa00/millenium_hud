@@ -1,5 +1,7 @@
 mi_hud.config = {}
 
+mi_hud.config.playerFOV = 75
+
 mi_hud.config.hideHudElements = {
     ["CHudHealth"] = true,
     ["CHudBattery"] = true,
@@ -16,12 +18,18 @@ mi_hud.icons.interface = {
     license = Material("resource/icons/license.png", "smooth mips"),
 }
 
+mi_hud.theme = {
+    base = Color(32, 43, 61),
+    baseOutline = Color(51, 69, 96)
+}
+
 if CLIENT then
     mi_hud.notifTypes = {
         [NOTIFY_CLEANUP] = Color(72,161,255),
         [NOTIFY_ERROR] = Color(255,60,60),
-        [NOTIFY_GENERIC] = Color(255,138,60),
+        [NOTIFY_GENERIC] = Color(255,170,60),
         [NOTIFY_HINT] = Color(72,161,255),
         [NOTIFY_UNDO] = Color(72,161,255)
     }
 end
+
