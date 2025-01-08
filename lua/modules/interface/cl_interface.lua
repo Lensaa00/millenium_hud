@@ -5,6 +5,11 @@ surface.CreateFont("Text", {font = "Nunito Black", extended = true, size = Scree
 surface.CreateFont("TextShadow", {font = "Nunito Black", extended = true, blursize = 2, size = ScreenScale(8.5)})
 surface.CreateFont("WatermarkTop", {font = "Nunito Black", extended = true, size = ScreenScale(7)})
 surface.CreateFont("WatermarkBottom", {font = "Nunito", extended = true, size = ScreenScale(6)})
+surface.CreateFont("Arrested", {font = "Nunito", extended = true, size = ScreenScale(7.5)})
+
+surface.CreateFont("HealthArmor", {font = "Nunito Black", extended = true, size = ScreenScale(5)})
+surface.CreateFont("HealthArmorShadow", {font = "Nunito Black", extended = true, blursize = 2, size = ScreenScale(5)})
+
 
 local SmoothedHealth = 100
 local SmoothedArmor = 100
@@ -14,6 +19,7 @@ function Interface()
     local scrw, scrh = ScrW(), ScrH()
 
     -- Опорная точка
+    -- local pivotlx, pivotly = ScreenScale(6), scrh - ScreenScale(20)
     local pivotlx, pivotly = ScreenScale(6), scrh - ScreenScale(1)
 
     -- Переменные игрока
@@ -60,10 +66,14 @@ function Interface()
     -- Здоровье
     draw.RoundedBox(8, pivotlx + ScreenScale(20), pivotly - ScreenScale(14), barWidth, scrh * 0.008, Color(120, 56, 45))
     draw.RoundedBox(8, pivotlx + ScreenScale(20), pivotly - ScreenScale(14), (SmoothedHealth / PMaxHealth) * barWidth, scrh * 0.008, Color(255, 89, 59))
+    -- draw.SimpleText(PHealth, "HealthArmorShadow", pivotlx + ScreenScale(20), pivotly - ScreenScale(14) + 1, Color(0,0,0), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    -- draw.SimpleText(PHealth, "HealthArmor", pivotlx + ScreenScale(20), pivotly - ScreenScale(14), Color(255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
     -- Броня
     draw.RoundedBox(8, pivotlx + ScreenScale(20), pivotly - ScreenScale(10), barWidth, scrh * 0.008, Color(36, 82, 144))
     draw.RoundedBox(8, pivotlx + ScreenScale(20), pivotly - ScreenScale(10), (SmoothedArmor / PMaxArmor) * barWidth, scrh * 0.008, Color(58, 143, 255))
+    -- draw.SimpleText(PArmor, "HealthArmorShadow", pivotlx + ScreenScale(20), pivotly - ScreenScale(8) + 1, Color(0,0,0), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    -- draw.SimpleText(PArmor, "HealthArmor", pivotlx + ScreenScale(20), pivotly - ScreenScale(8), Color(255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
     -- Разделитель
     draw.RoundedBox(0, pivotlx + scrw * .186, pivotly - ScreenScale(19.5) + ScreenScale(4), 1, scrh * 0.05 - ScreenScale(8), Color(255, 255, 255, 10))
@@ -71,7 +81,7 @@ function Interface()
     -- Еда
     surface.SetDrawColor(255, 153, 85)
     surface.SetMaterial(mi_hud.icons.interface["hunger"])
-    surface.DrawTexturedRect(pivotlx + scrw * 0.191, pivotly - scrh * 0.04 - ScreenScale(.5), ScreenScale(8), ScreenScale(8))
+    surface.DrawTexturedRect(pivotlx + scrw * 0.1935, pivotly - scrh * 0.038 - ScreenScale(.5), ScreenScale(6.5), ScreenScale(6.5))
     draw.SimpleText(PHunger .. "%", "Hunger", pivotlx + scrw * 0.22, pivotly - scrh * 0.03 - ScreenScale(.5), Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     -- draw.RoundedBox(8, pivotlx + scrw * 0.208, pivotly - scrh * 0.0325 - ScreenScale(.5), ScreenScale(18), 9, Color(255, 153, 85))
 
@@ -89,7 +99,6 @@ function Interface()
     -- Работа
     draw.RoundedBox(8, pivotlx, pivotly - scrh * .12, ScreenScale(11), ScreenScale(11), mi_hud.theme.baseOutline)
     draw.RoundedBox(8, pivotlx + 1, pivotly - scrh * .12 + 1, ScreenScale(11) - 2, ScreenScale(11) - 2, mi_hud.theme.base)
-
 
     surface.SetDrawColor(255, 255, 255)
     surface.SetMaterial(mi_hud.icons.interface["job"])
@@ -109,6 +118,20 @@ function Interface()
         draw.SimpleText("Есть лицензия", "TextShadow", pivotlx + scrw * .0225, pivotly - scrh * .143 + 2, Color(0,0,0, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
         draw.SimpleText("Есть лицензия", "Text", pivotlx + scrw * .0225, pivotly - scrh * .143, Color(255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
+
+    if PArrested then
+        local arrestTime = Player:GetNWInt("ArrestTime") or 0
+        local timeLeft = math.max(0, math.floor(arrestTime - CurTime()))
+
+        surface.SetFont("Text")
+        local tw, th = surface.GetTextSize("Вы арестованы! Осталось: " .. timeLeft .. " сек.")
+        tw = tw + scrw * .02
+        th = th + 15
+        draw.RoundedBox(8, scrw / 2 - tw / 2 , scrh * .90 - th / 2 + 2, tw, th, Color(255,89,51))
+        draw.RoundedBox(8, scrw / 2 - tw / 2 , scrh * .90 - th / 2, tw, th, mi_hud.theme.base)
+        draw.SimpleText("Вы арестованы! Осталось: " .. timeLeft .. " сек.", "Arrested", scrw / 2, scrh * .90, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+
 end
 
 -- Хук отрисовки

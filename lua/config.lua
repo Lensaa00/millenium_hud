@@ -16,11 +16,15 @@ mi_hud.icons.interface = {
     job = Material("resource/icons/case.png", "smooth mips"),
     money = Material("resource/icons/money.png", "smooth mips"),
     license = Material("resource/icons/license.png", "smooth mips"),
+    warning = Material("resource/icons/warning.png", "smooth mips"),
+    arrested = Material("resource/icons/arrested.png", "smooth mips"),
+    wanted = Material("resource/icons/wanted.png", "smooth mips"),
 }
 
 mi_hud.theme = {
     base = Color(32, 43, 61),
-    baseOutline = Color(51, 69, 96)
+    baseOutline = Color(51, 69, 96),
+    header = Color(51, 69, 96)
 }
 
 if CLIENT then

@@ -16,21 +16,63 @@ hook.Add("PostDrawTranslucentRenderables", "DrawPlayerInfo", function()
         if not boneIndex then continue end
 
         local headPos = ply:GetBonePosition(boneIndex) or ply:GetPos()
-        local displayPos = headPos + Vector(0, 0, 2.5)
+        local displayPos = headPos + Vector(0, 0, 2)
 
         local angle = localPlayer:EyeAngles()
         angle:RotateAroundAxis(angle:Forward(), 90)
         angle:RotateAroundAxis(angle:Right(), 90)
 
         cam.Start3D2D(displayPos, Angle(0, angle.y, 90), 0.05)
-            local PlayerName = ply:getDarkRPVar("rpname") or "Неизвестный"
+            local hasLicense = ply:getDarkRPVar("HasGunlicense")
+            local arrested = ply:getDarkRPVar("Arrested")
+            local wanted = ply:getDarkRPVar("wanted")
+
+            -- Размеры текста
             surface.SetFont("Overhead")
-            local tw, th = surface.GetTextSize(PlayerName)
+            local tw, th = surface.GetTextSize(playerName)
 
-            local startX, startY = 100, 0
+            -- Рассчитываем размеры панели
+            local iconSize = 30
+            local iconPadding = 7
+            local numIcons = (hasLicense and 1 or 0) + (arrested and 1 or 0) + (wanted and 1 or 0)
+            local panelW = tw + 40 + (numIcons * iconSize) + ((numIcons - 1) * iconPadding)
+            local panelH = math.max(th + 15, iconSize)
 
-            draw.RoundedBox(8, startX, startY, tw + 50, th + 15, mi_hud.theme.base)
-            draw.SimpleText(PlayerName, "Overhead", startX + 25, startY + th / 2 + 7.5, Color(255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            -- Позиция панели
+            local startX, startY = 200 -panelW / 2, - panelH / 2
+
+            -- Рисуем плашку
+            draw.RoundedBox(8, startX - 1, startY - 1, panelW + 2, panelH + 2, mi_hud.theme.baseOutline)
+            draw.RoundedBox(8, startX, startY, panelW, panelH, mi_hud.theme.base)
+
+            -- Рисуем имя игрока
+            local textX = startX + ScreenScale(5)
+            local textY = startY + (panelH / 2)
+            draw.SimpleText(playerName, "Overhead", textX, textY, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+
+            -- Рисуем значки справа от имени
+            local iconX = textX + tw + 10
+            local iconY = startY + (panelH - iconSize) / 2
+
+            if hasLicense then
+                surface.SetDrawColor(118, 184, 255)
+                surface.SetMaterial(mi_hud.icons.interface.license)
+                surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
+                iconX = iconX + iconSize + iconPadding
+            end
+
+            if arrested then
+                surface.SetDrawColor(255, 148, 99)
+                surface.SetMaterial(mi_hud.icons.interface.arrested)
+                surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
+                iconX = iconX + iconSize + iconPadding
+            end
+
+            if wanted then
+                surface.SetDrawColor(255, 81, 81)
+                surface.SetMaterial(mi_hud.icons.interface.wanted)
+                surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
+            end
         cam.End3D2D()
     end
 end)
