@@ -22,8 +22,8 @@ mi_hud.icons.interface = {
 }
 
 mi_hud.theme = {
-    base = Color(32, 43, 61),
-    baseOutline = Color(51, 69, 96),
+    base = Color(35, 45, 80),
+    baseOutline = Color(56, 72, 129),
     header = Color(51, 69, 96)
 }
 

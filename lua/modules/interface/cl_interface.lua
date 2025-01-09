@@ -109,7 +109,8 @@ function Interface()
 
     -- Лицензия
     if PHasLicense then
-        draw.RoundedBox(8, pivotlx, pivotly - scrh * .1555, ScreenScale(11), ScreenScale(11), mi_hud.theme.base)
+        draw.RoundedBox(8, pivotlx, pivotly - scrh * .1555, ScreenScale(11), ScreenScale(11), mi_hud.theme.baseOutline)
+        draw.RoundedBox(8, pivotlx + 1, pivotly - scrh * .1555 + 1, ScreenScale(11) - 2, ScreenScale(11) - 2, mi_hud.theme.base)
 
         surface.SetDrawColor(255, 255, 255)
         surface.SetMaterial(mi_hud.icons.interface["license"])
