@@ -6,6 +6,7 @@ hook.Add("PostDrawTranslucentRenderables", "DrawPlayerInfo", function()
 
     for _, ply in ipairs(players) do
         if ply == localPlayer or not ply:Alive() or not ply:IsValid() then continue end
+        if localPlayer:GetEyeTrace().Entity ~= ply then continue end
 
         local distance = localPlayer:GetPos():Distance(ply:GetPos())
         if distance > 150 then continue end -- Ограничение видимости по расстоянию
@@ -22,7 +23,7 @@ hook.Add("PostDrawTranslucentRenderables", "DrawPlayerInfo", function()
         angle:RotateAroundAxis(angle:Forward(), 90)
         angle:RotateAroundAxis(angle:Right(), 90)
 
-        cam.Start3D2D(displayPos, Angle(0, angle.y, 90), 0.05)
+        cam.Start3D2D(displayPos, Angle(0, angle.y, 90), 0.06)
             local hasLicense = ply:getDarkRPVar("HasGunlicense")
             local arrested = ply:getDarkRPVar("Arrested")
             local wanted = ply:getDarkRPVar("wanted")
