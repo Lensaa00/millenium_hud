@@ -22,6 +22,9 @@ mi_hud.icons.interface = {
     arrested = Material("resource/icons/arrested.png", "smooth mips"),
     wanted = Material("resource/icons/wanted.png", "smooth mips"),
 }
+mi_hud.icons.scoreboard = {
+    network = Material("resource/icons/network.png", "smooth mips"),
+}
 
 mi_hud.theme = {
     base = Color(46, 53, 80),
@@ -33,11 +36,11 @@ if CLIENT then
     mi_hud.notifTypes = {
         [NOTIFY_CLEANUP] = {
             accent = Color(72,161,255),
-            back = Color(29,56,85, 210),
+            back = Color(29,56,85),
         },
         [NOTIFY_ERROR] = {
             accent = Color(255,60,60),
-            back = Color(84,43,43, 210)
+            back = Color(84,43,43)
         },
         [NOTIFY_GENERIC] = {
             accent = Color(255,222,60),
@@ -45,11 +48,15 @@ if CLIENT then
         },
         [NOTIFY_HINT] = {
             accent = Color(72,161,255),
-            back = Color(29,56,85, 210),
+            back = Color(29,56,85),
         },
         [NOTIFY_UNDO] = {
-            accent = Color(72,161,255),
-            back = Color(29,56,85, 210),
+            accent = Color(195,195,195),
+            back = Color(51,51,51),
+        },
+        ["NOTIFY_DARKRP"] = {
+            accent = Color(195,195,195),
+            back = Color(51,51,51),
         }
     }
 end

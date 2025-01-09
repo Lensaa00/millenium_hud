@@ -40,7 +40,7 @@ hook.Add("PostDrawTranslucentRenderables", "DrawPlayerInfo", function()
             local panelH = math.max(th + 15, iconSize)
 
             -- Позиция панели
-            local startX, startY = 200 -panelW / 2, - panelH / 2
+            local startX, startY = ScreenScale(55) -panelW / 2, - panelH / 2
 
             -- Рисуем плашку
             draw.RoundedBox(mi_hud.rounding, startX - 1, startY - 1, panelW + 2, panelH + 2, mi_hud.theme.baseOutline)

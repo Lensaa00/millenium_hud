@@ -15,15 +15,17 @@ function Notification(text, type, length)
     local padding = ScreenScale(5)
 
     local panel = vgui.Create("DPanel")
-    panel:SetSize(tw + padding * 4, ScreenScale(12))
+    panel:SetSize(tw + padding * 4, th + padding)
     panel:SetPos(scrw - panel:GetWide() - 10, scrh)
     panel:SetAlpha(0)
     panel:AlphaTo(255, 1, 0)
+    panel.NotifTime = CurTime()
     panel.Paint = function(me, w, h)
         -- draw.RoundedBox(8, 0, 0, w, h, mi_hud.notifTypes[type].outline)
-        draw.RoundedBox(mi_hud.rounding, 1, 1, w - 2, h - 2, mi_hud.notifTypes[type].back)
-        -- draw.RoundedBoxEx(8, 0, 0, scrw * .002, h, mi_hud.notifTypes[type].accent or Color(255, 255, 255), false, false, false, false)
-        draw.SimpleText(text, "Notification", w / 2, h / 2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.RoundedBox(mi_hud.rounding, 0, 0, w, h, mi_hud.notifTypes[type].back)
+        draw.RoundedBox(0, 0, h - 3, w, 23, Color(0,0,0,100))
+        draw.RoundedBox(0, 0, h - 3, w - w / length * (CurTime() - me.NotifTime), 3, mi_hud.notifTypes[type].accent)
+        draw.SimpleText(text, "Notification", w / 2, h / 2 - 2, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
     table.insert(notifications, panel)
@@ -71,7 +73,7 @@ end
 
 usermessage.Hook("_Notify", function (msg)
     local text = msg:ReadString()
-    Notification( text , NOTIFY_ERROR, 7)
+    Notification( text , "NOTIFY_DARKRP", 7)
 end)
 
 function notification.AddLegacy(text, type, length)

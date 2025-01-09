@@ -28,7 +28,7 @@ local function displayNextMessage()
         draw.RoundedBox(mi_hud.rounding, 1, 1, w - 2, h - 2, mi_hud.theme.base)
         surface.SetDrawColor(255, 69, 69)
         surface.SetMaterial(mi_hud.icons.interface.warning)
-        surface.DrawTexturedRect(10, 10, h - 20, h - 20)
+        surface.DrawTexturedRect(13, 10, h - 20, h - 20)
         draw.SimpleText(text, "MessageText", 45, h / 2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
 
