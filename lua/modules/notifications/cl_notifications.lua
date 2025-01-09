@@ -15,7 +15,7 @@ function Notification(text, type, length)
     local padding = ScreenScale(5)
 
     local panel = vgui.Create("DPanel")
-    panel:SetSize(tw + padding * 4, th + padding)
+    panel:SetSize(tw + padding * 2, th + padding)
     panel:SetPos(scrw - panel:GetWide() - 10, scrh)
     panel:SetAlpha(0)
     panel:AlphaTo(255, 1, 0)

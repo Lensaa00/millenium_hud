@@ -1,5 +1,6 @@
 -- Шрифты
 surface.CreateFont("Logo", {font = "Nunito Black", extended = true, size = ScreenScale(10)})
+surface.CreateFont("Time", {font = "Nunito Black", extended = true, size = ScreenScale(6)})
 surface.CreateFont("Hunger", {font = "Nunito Black", extended = true, size = ScreenScale(9)})
 surface.CreateFont("Text", {font = "Nunito Black", extended = true, size = ScreenScale(8.5)})
 surface.CreateFont("TextShadow", {font = "Nunito Black", extended = true, blursize = 2, size = ScreenScale(8.5)})
@@ -12,6 +13,10 @@ surface.CreateFont("HealthArmorShadow", {font = "Nunito Black", extended = true,
 
 local SmoothedHealth = 100
 local SmoothedArmor = 100
+
+local ShowingLogo = true
+local LastLogoChange = CurTime()
+local LogoChangeDelay = 10
 
 function Interface()
     if not LocalPlayer():Alive() then return end -- Если игрок мертв, не отображаем
@@ -40,6 +45,7 @@ function Interface()
     local PArrested = Player:getDarkRPVar("Arrested")
 
     local PCount = player.GetCount() -- Количество игроков на сервере
+    local Time = os.date("%H:%M")
 
     -- Плавная броня и здоровье
     SmoothedHealth = Lerp(FrameTime() * 5, SmoothedHealth, PHealth)
@@ -57,10 +63,22 @@ function Interface()
     draw.RoundedBox(mi_hud.rounding, pivotlx + 1, pivotly - scrh * 0.05 + 1, scrw * 0.24 - 2, scrh * 0.04 - 2, mi_hud.theme.base)
 
     -- Лого
-    draw.SimpleText("Mi", "Logo", pivotlx + ScreenScale(4), pivotly - scrh * .03, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    if ShowingLogo then
+        draw.SimpleText("Mi", "Logo", pivotlx + ScreenScale(8.1), pivotly - scrh * .03, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        if (CurTime() - LastLogoChange >= LogoChangeDelay) then
+            ShowingLogo = false
+            LastLogoChange = CurTime()
+        end
+    else
+        draw.SimpleText(Time, "Time", pivotlx + ScreenScale(8.25), pivotly - scrh * .03, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        if (CurTime() - LastLogoChange >= LogoChangeDelay) then
+            ShowingLogo = true
+            LastLogoChange = CurTime()
+        end
+    end
 
     -- Разделитель
-    draw.RoundedBox(0, pivotlx + ScreenScale(16.5), pivotly - ScreenScale(19.5) + ScreenScale(4), 1, scrh * 0.05 - ScreenScale(8), Color(255, 255, 255, 10))
+    draw.RoundedBox(0, pivotlx + ScreenScale(16.5), pivotly - ScreenScale(19.5) + ScreenScale(4), 1, scrh * 0.05 - ScreenScale(8), mi_hud.theme.baseOutline)
 
     -- Здоровье
     draw.RoundedBox(mi_hud.rounding, pivotlx + ScreenScale(20), pivotly - ScreenScale(14), barWidth, scrh * 0.008, Color(138, 76, 65))
@@ -75,12 +93,12 @@ function Interface()
     -- draw.SimpleText(PArmor, "HealthArmor", pivotlx + ScreenScale(20), pivotly - ScreenScale(8), Color(255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
     -- Разделитель
-    draw.RoundedBox(0, pivotlx + scrw * .186, pivotly - ScreenScale(19.5) + ScreenScale(4), 1, scrh * 0.05 - ScreenScale(8), Color(255, 255, 255, 10))
+    draw.RoundedBox(0, pivotlx + scrw * .186, pivotly - ScreenScale(19.5) + ScreenScale(4), 1, scrh * 0.05 - ScreenScale(8), mi_hud.theme.baseOutline)
 
     -- Еда
     surface.SetDrawColor(255, 153, 85)
     surface.SetMaterial(mi_hud.icons.interface["hunger"])
-    surface.DrawTexturedRect(pivotlx + scrw * 0.1935, pivotly - scrh * 0.038 - ScreenScale(.5), ScreenScale(6.5), ScreenScale(6.5))
+    surface.DrawTexturedRect(pivotlx + scrw * 0.193, pivotly - scrh * 0.038 - ScreenScale(.5), ScreenScale(6.5), ScreenScale(6.5))
     draw.SimpleText(PHunger .. "%", "Hunger", pivotlx + scrw * 0.22, pivotly - scrh * 0.03 - ScreenScale(.5), Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     -- draw.RoundedBox(8, pivotlx + scrw * 0.208, pivotly - scrh * 0.0325 - ScreenScale(.5), ScreenScale(18), 9, Color(255, 153, 85))
 
