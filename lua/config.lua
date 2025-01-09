@@ -1,5 +1,7 @@
 mi_hud.config = {}
 
+mi_hud.rounding = 0
+
 mi_hud.config.playerFOV = 75
 
 mi_hud.config.hideHudElements = {
@@ -22,18 +24,33 @@ mi_hud.icons.interface = {
 }
 
 mi_hud.theme = {
-    base = Color(35, 45, 80),
-    baseOutline = Color(56, 72, 129),
-    header = Color(51, 69, 96)
+    base = Color(46, 53, 80),
+    baseOutline = Color(70, 80, 122),
+    header = Color(51, 69, 96),
 }
 
 if CLIENT then
     mi_hud.notifTypes = {
-        [NOTIFY_CLEANUP] = Color(72,161,255),
-        [NOTIFY_ERROR] = Color(255,60,60),
-        [NOTIFY_GENERIC] = Color(255,170,60),
-        [NOTIFY_HINT] = Color(72,161,255),
-        [NOTIFY_UNDO] = Color(72,161,255)
+        [NOTIFY_CLEANUP] = {
+            accent = Color(72,161,255),
+            back = Color(29,56,85, 210),
+        },
+        [NOTIFY_ERROR] = {
+            accent = Color(255,60,60),
+            back = Color(84,43,43, 210)
+        },
+        [NOTIFY_GENERIC] = {
+            accent = Color(255,222,60),
+            back = Color(106,88,30, 210)
+        },
+        [NOTIFY_HINT] = {
+            accent = Color(72,161,255),
+            back = Color(29,56,85, 210),
+        },
+        [NOTIFY_UNDO] = {
+            accent = Color(72,161,255),
+            back = Color(29,56,85, 210),
+        }
     }
 end
 

@@ -43,8 +43,8 @@ hook.Add("PostDrawTranslucentRenderables", "DrawPlayerInfo", function()
             local startX, startY = 200 -panelW / 2, - panelH / 2
 
             -- Рисуем плашку
-            draw.RoundedBox(8, startX - 1, startY - 1, panelW + 2, panelH + 2, mi_hud.theme.baseOutline)
-            draw.RoundedBox(8, startX, startY, panelW, panelH, mi_hud.theme.base)
+            draw.RoundedBox(mi_hud.rounding, startX - 1, startY - 1, panelW + 2, panelH + 2, mi_hud.theme.baseOutline)
+            draw.RoundedBox(mi_hud.rounding, startX, startY, panelW, panelH, mi_hud.theme.base)
 
             -- Рисуем имя игрока
             local textX = startX + ScreenScale(5)
