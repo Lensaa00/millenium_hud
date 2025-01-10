@@ -1,5 +1,5 @@
 local function SetupFonts()
-    surface.CreateFont("ScoreboardHeader", {font = "Nunito", extended = true, size = ScreenScale(6)})
+    surface.CreateFont("ScoreboardHeader", {font = "Nunito Regular", extended = true, size = ScreenScale(6)})
     surface.CreateFont("ScoreboardText", {font = "Nunito Bold", extended = true, size = ScreenScale(7)})
     surface.CreateFont("ScoreboardTextShadow", {font = "Nunito Bold", blursize = 3, extended = true, size = ScreenScale(7)})
     surface.CreateFont("ScoreboardButtons", {font = "Nunito", extended = true, size = ScreenScale(6)})

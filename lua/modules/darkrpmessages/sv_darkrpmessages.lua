@@ -31,3 +31,19 @@ hook.Add("playerUnArrested", "UnArrestedHook", function (criminal, actor)
     net.Broadcast()
     return
 end)
+
+hook.Add("playerWarranted", "WarrantHook", function (criminal, actor)
+    local text = "Полиция получила ордер на обыск \"" .. criminal:getDarkRPVar("rpname") .. "\"."
+    net.Start("ShowDarkRPMessage")
+        net.WriteString(text)
+    net.Broadcast()
+    return
+end)
+
+hook.Add("playerUnWarranted", "UnWarrantHook", function (criminal, actor)
+    local text = "Ордер на обыск \"" .. criminal:getDarkRPVar("rpname") .. "\" был аннулирован."
+    net.Start("ShowDarkRPMessage")
+        net.WriteString(text)
+    net.Broadcast()
+    return
+end)

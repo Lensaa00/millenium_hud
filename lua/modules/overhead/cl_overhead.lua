@@ -1,20 +1,37 @@
 surface.CreateFont("Overhead", {font = "Nunito Bold", extended = true, size = ScreenScale(14)})
 
+local playerAlpha = {} -- Таблица для хранения прозрачности для каждого игрока
+
 hook.Add("PostDrawTranslucentRenderables", "DrawPlayerInfo", function()
     local localPlayer = LocalPlayer()
     local players = player.GetAll()
 
-
-    --[[   ДОБАВИТЬ ПЛАВНОЕ ЗАТЕНЕНИЕ ИСЧЕЗНОВЕНИЯ   ]]
-
-
-
     for _, ply in ipairs(players) do
         if ply == localPlayer or not ply:Alive() or not ply:IsValid() then continue end
-        -- if localPlayer:GetEyeTrace().Entity ~= ply then continue end
 
         local distance = localPlayer:GetPos():Distance(ply:GetPos())
-        if distance > 150 then continue end
+
+        -- Порог видимости
+        local maxDistance = 150
+        local fadeDistance = 120 -- Дистанция, на которой начнётся уменьшение прозрачности
+
+        -- Если игрок не в зоне видимости, задаём прозрачность как 0
+        if distance > maxDistance then
+            playerAlpha[ply] = Lerp(FrameTime() * 10, playerAlpha[ply] or 0, 0)
+            continue
+        end
+
+        -- Вычисление прозрачности
+        local alpha = 255
+        if distance > fadeDistance then
+            alpha = math.Clamp(255 - ((distance - fadeDistance) / (maxDistance - fadeDistance)) * 255, 0, 255)
+        end
+
+        -- Плавный переход прозрачности
+        playerAlpha[ply] = Lerp(FrameTime() * 10, playerAlpha[ply] or 0, alpha)
+
+        -- Игнорируем полностью прозрачные панели
+        if playerAlpha[ply] <= 0 then continue end
 
         local playerName = ply:getDarkRPVar("rpname") or ply:Nick()
 
@@ -45,39 +62,44 @@ hook.Add("PostDrawTranslucentRenderables", "DrawPlayerInfo", function()
 
             local startX, startY =  125, - panelH / 2
 
-            draw.RoundedBox(mi_hud.rounding, startX - 1, startY - 1, panelW + 2, panelH + 2, mi_hud.theme.baseOutline)
-            draw.RoundedBox(mi_hud.rounding, startX, startY, panelW, panelH, mi_hud.theme.base)
+            -- Применяем прозрачность
+            local panelColor = Color(mi_hud.theme.base.r, mi_hud.theme.base.g, mi_hud.theme.base.b, playerAlpha[ply])
+            local outlineColor = Color(mi_hud.theme.baseOutline.r, mi_hud.theme.baseOutline.g, mi_hud.theme.baseOutline.b, playerAlpha[ply])
+            local textColor = Color(255, 255, 255, playerAlpha[ply])
+
+            draw.RoundedBox(mi_hud.rounding, startX - 1, startY - 1, panelW + 2, panelH + 2, outlineColor)
+            draw.RoundedBox(mi_hud.rounding, startX, startY, panelW, panelH, panelColor)
 
             local textX = startX + ScreenScale(5)
             local textY = startY + (panelH / 2)
-            draw.SimpleText(playerName, "Overhead", textX, textY, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            draw.SimpleText(playerName, "Overhead", textX, textY, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
             local iconX = textX + tw + 10
             local iconY = startY + (panelH - iconSize) / 2
 
             if speaking then
-                surface.SetDrawColor(255, 255, 255)
+                surface.SetDrawColor(255, 255, 255, playerAlpha[ply])
                 surface.SetMaterial(mi_hud.icons.interface.voice)
                 surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
                 iconX = iconX + iconSize + iconPadding
             end
 
             if hasLicense then
-                surface.SetDrawColor(118, 184, 255)
+                surface.SetDrawColor(118, 184, 255, playerAlpha[ply])
                 surface.SetMaterial(mi_hud.icons.interface.license)
                 surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
                 iconX = iconX + iconSize + iconPadding
             end
 
             if arrested then
-                surface.SetDrawColor(255, 148, 99)
+                surface.SetDrawColor(255, 148, 99, playerAlpha[ply])
                 surface.SetMaterial(mi_hud.icons.interface.arrested)
                 surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
                 iconX = iconX + iconSize + iconPadding
             end
 
             if wanted then
-                surface.SetDrawColor(255, 81, 81)
+                surface.SetDrawColor(255, 81, 81, playerAlpha[ply])
                 surface.SetMaterial(mi_hud.icons.interface.wanted)
                 surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
             end

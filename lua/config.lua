@@ -23,9 +23,9 @@ mi_hud.icons.scoreboard = {
     network = Material("resource/icons/network.png", "smooth mips"),
 }
 mi_hud.theme = {
-    base = Color(46, 53, 80),
-    baseOutline = Color(70, 80, 122),
-    header = Color(51, 69, 96),
+    base = Color(46, 53, 80, 255),
+    baseOutline = Color(70, 80, 122, 255),
+    header = Color(51, 69, 96, 255),
 }
 if CLIENT then
     mi_hud.notifTypes = {

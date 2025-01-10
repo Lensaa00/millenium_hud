@@ -1,13 +1,13 @@
 -- Шрифты
 local function SetupFonts()
-    surface.CreateFont("Logo", {font = "Nunito", extended = true, size = ScreenScale(10)})
-    surface.CreateFont("Time", {font = "Nunito", extended = true, size = ScreenScale(6)})
-    surface.CreateFont("Hunger", {font = "Nunito", extended = true, size = ScreenScale(9)})
+    surface.CreateFont("Logo", {font = "Nunito Bold", extended = true, size = ScreenScale(10)})
+    surface.CreateFont("Time", {font = "Nunito Bold", extended = true, size = ScreenScale(6)})
+    surface.CreateFont("Hunger", {font = "Nunito Bold", extended = true, size = ScreenScale(9)})
     surface.CreateFont("Text", {font = "Nunito Black", extended = true, size = ScreenScale(8.5)})
     surface.CreateFont("TextShadow", {font = "Nunito Black", extended = true, blursize = 2, size = ScreenScale(8.5)})
     surface.CreateFont("WatermarkTop", {font = "Nunito Black", extended = true, size = ScreenScale(7)})
     surface.CreateFont("WatermarkBottom", {font = "Nunito", extended = true, size = ScreenScale(6)})
-    surface.CreateFont("Arrested", {font = "Nunito", extended = true, size = ScreenScale(7.5)})
+    surface.CreateFont("Arrested", {font = "Nunito", extended = true, size = ScreenScale(6)})
     surface.CreateFont("HealthArmor", {font = "Nunito Black", extended = true, size = ScreenScale(5)})
     surface.CreateFont("HealthArmorShadow", {font = "Nunito Black", extended = true, blursize = 2, size = ScreenScale(5)})
 end
@@ -144,20 +144,30 @@ function Interface()
         local arrestTime = Player:GetNWInt("ArrestTime") or 0
         local timeLeft = math.max(0, math.floor(arrestTime - CurTime()))
 
-        surface.SetFont("Text")
+        surface.SetFont("Arrested")
         local tw, th = surface.GetTextSize("Вы арестованы! Осталось: " .. timeLeft .. " сек.")
-        tw = tw + scrw * .02
-        th = th + 15
-        draw.RoundedBox(mi_hud.rounding, scrw / 2 - tw / 2 , scrh * .90 - th / 2 + 2, tw, th, Color(255, 148, 99))
-        draw.RoundedBox(mi_hud.rounding, scrw / 2 - tw / 2, scrh * .90 - th / 2, tw, th, mi_hud.theme.baseOutline)
-        draw.RoundedBox(mi_hud.rounding, scrw / 2 - tw / 2 + 1, scrh * .90 - th / 2 + 1, tw - 2, th - 2, mi_hud.theme.base)
+
+        local panelW = tw + scrw * .02
+        local panelH = th + 7
+
+        local iconSize = panelH * .6
+
+        local panelX = scrw / 2 - panelW / 2
+        local panelY = scrh * .90 - panelH / 2
+
+
+
+        surface.SetFont("Text")
+        draw.RoundedBox(mi_hud.rounding, panelX, panelY + 2, panelW, panelH, Color(255, 148, 99))
+        draw.RoundedBox(mi_hud.rounding, panelX, panelY, panelW, panelH, mi_hud.theme.baseOutline)
+        draw.RoundedBox(mi_hud.rounding, panelX + 1, panelY + 1, panelW - 2, panelH - 2, mi_hud.theme.base)
 
 
         surface.SetDrawColor(255, 148, 99)
         surface.SetMaterial(mi_hud.icons.interface.arrested)
-        surface.DrawTexturedRect(scrw / 2 - tw / 2 + scrw * .0075 , scrh * .90 - th / 2 + scrh * .01, 20, 20)
+        surface.DrawTexturedRect(panelX + 7, panelY + panelH / 2 - iconSize / 2, iconSize, iconSize)
 
-        draw.SimpleText("Вы арестованы! Осталось: " .. timeLeft .. " сек.", "Arrested", scrw / 2, scrh * .90, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText("Вы арестованы! Осталось: " .. timeLeft .. " сек.", "Arrested", panelX + 7 + iconSize + 7, panelY + panelH / 2, Color(255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
 
 end
