@@ -1,7 +1,7 @@
 surface.CreateFont("Notification", {font = 'Nunito Bold', extended = true, size = ScreenScale(6.5)})
 
 local notifications = notifications or {}
-local maxMessages = 4
+local maxMessages = 6
 
 local function CopyColor(color)
     return Color(color.r, color.g, color.b, color.a)
@@ -61,12 +61,14 @@ function Notification(text, type, length)
     timer.Simple(length, function()
         if IsValid(panel) then
             local panelX, panelY = panel:GetPos()
-            panel:AlphaTo(0, 0.25, 0)
             table.RemoveByValue(notifications, panel)
             UpdatePositions()
-            panel:MoveTo(scrw + panel:GetWide(), panelY, 1.5, 0, .1, function ()
-                panel:Remove()
+            panel:MoveTo(scrw - panel:GetWide() - 20, panelY, .25, 0, .1, function ()
+                panel:MoveTo(scrw + panel:GetWide(), panelY, 1, 0, .1, function ()
+                    panel:Remove()
+                end)
             end)
+
         end
     end)
 end

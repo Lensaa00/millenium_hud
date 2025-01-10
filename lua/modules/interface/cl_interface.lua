@@ -70,7 +70,7 @@ function Interface()
             LastLogoChange = CurTime()
         end
     else
-        draw.SimpleText(Time, "Time", pivotlx + ScreenScale(8.25), pivotly - scrh * .03, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(Time    , "Time", pivotlx + ScreenScale(8.25), pivotly - scrh * .03, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         if (CurTime() - LastLogoChange >= LogoChangeDelay) then
             ShowingLogo = true
             LastLogoChange = CurTime()
@@ -145,8 +145,15 @@ function Interface()
         local tw, th = surface.GetTextSize("Вы арестованы! Осталось: " .. timeLeft .. " сек.")
         tw = tw + scrw * .02
         th = th + 15
-        draw.RoundedBox(mi_hud.rounding, scrw / 2 - tw / 2 , scrh * .90 - th / 2 + 2, tw, th, Color(255,89,51))
-        draw.RoundedBox(mi_hud.rounding, scrw / 2 - tw / 2 , scrh * .90 - th / 2, tw, th, mi_hud.theme.base)
+        draw.RoundedBox(mi_hud.rounding, scrw / 2 - tw / 2 , scrh * .90 - th / 2 + 2, tw, th, Color(255, 148, 99))
+        draw.RoundedBox(mi_hud.rounding, scrw / 2 - tw / 2, scrh * .90 - th / 2, tw, th, mi_hud.theme.baseOutline)
+        draw.RoundedBox(mi_hud.rounding, scrw / 2 - tw / 2 + 1, scrh * .90 - th / 2 + 1, tw - 2, th - 2, mi_hud.theme.base)
+
+
+        surface.SetDrawColor(255, 148, 99)
+        surface.SetMaterial(mi_hud.icons.interface.arrested)
+        surface.DrawTexturedRect(scrw / 2 - tw / 2 + scrw * .0075 , scrh * .90 - th / 2 + scrh * .01, 20, 20)
+
         draw.SimpleText("Вы арестованы! Осталось: " .. timeLeft .. " сек.", "Arrested", scrw / 2, scrh * .90, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 

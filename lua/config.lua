@@ -1,9 +1,6 @@
 mi_hud.config = {}
-
 mi_hud.rounding = 0
-
 mi_hud.config.playerFOV = 75
-
 mi_hud.config.hideHudElements = {
     ["CHudHealth"] = true,
     ["CHudBattery"] = true,
@@ -11,7 +8,6 @@ mi_hud.config.hideHudElements = {
     ["CHudDamageIndicator"] = true,
     ["CHudCrosshairInfo"] = true
 }
-
 mi_hud.icons = {}
 mi_hud.icons.interface = {
     hunger = Material("resource/icons/food.png", "smooth mips"),
@@ -21,17 +17,16 @@ mi_hud.icons.interface = {
     warning = Material("resource/icons/warning.png", "smooth mips"),
     arrested = Material("resource/icons/arrested.png", "smooth mips"),
     wanted = Material("resource/icons/wanted.png", "smooth mips"),
+    voice = Material("resource/icons/voice.png", "smooth mips"),
 }
 mi_hud.icons.scoreboard = {
     network = Material("resource/icons/network.png", "smooth mips"),
 }
-
 mi_hud.theme = {
     base = Color(46, 53, 80),
     baseOutline = Color(70, 80, 122),
     header = Color(51, 69, 96),
 }
-
 if CLIENT then
     mi_hud.notifTypes = {
         [NOTIFY_CLEANUP] = {
@@ -60,4 +55,3 @@ if CLIENT then
         }
     }
 end
-

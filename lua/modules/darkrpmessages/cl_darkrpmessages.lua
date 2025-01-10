@@ -3,14 +3,12 @@ local isDisplaying = false
 
 surface.CreateFont("MessageText", {font = "Nunito Bold", extended = true, size = ScreenScale(7), })
 
--- Функция для отображения одного сообщения
 local function displayNextMessage()
     if isDisplaying or #messages == 0 then return end
 
     isDisplaying = true
-    local text = table.remove(messages, 1) -- Берем первое сообщение из очереди
+    local text = table.remove(messages, 1)
 
-    -- Рассчитываем размеры панели
     surface.SetFont("MessageText")
     local panelW, panelH = surface.GetTextSize(text)
     panelW = panelW + ScreenScale(20)
@@ -32,13 +30,12 @@ local function displayNextMessage()
         draw.SimpleText(text, "MessageText", 45, h / 2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
 
-    -- Убираем сообщение через 7 секунд
     timer.Simple(5, function()
         if IsValid(panel) then
             panel:AlphaTo(0, 0.25, 0, function()
                 panel:Remove()
                 isDisplaying = false
-                displayNextMessage() -- Переходим к следующему сообщению
+                displayNextMessage()
             end)
         else
             isDisplaying = false
@@ -47,13 +44,11 @@ local function displayNextMessage()
     end)
 end
 
--- Добавляем сообщение в очередь
 function addMessageToQueue(text)
     table.insert(messages, text)
-    displayNextMessage() -- Проверяем, можно ли сразу начать отображение
+    displayNextMessage()
 end
 
--- Получаем сообщение с сервера
 net.Receive("ShowDarkRPMessage", function()
     local text = net.ReadString()
     addMessageToQueue(text)

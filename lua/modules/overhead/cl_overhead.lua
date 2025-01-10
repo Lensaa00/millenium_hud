@@ -9,7 +9,7 @@ hook.Add("PostDrawTranslucentRenderables", "DrawPlayerInfo", function()
         if localPlayer:GetEyeTrace().Entity ~= ply then continue end
 
         local distance = localPlayer:GetPos():Distance(ply:GetPos())
-        if distance > 150 then continue end -- Ограничение видимости по расстоянию
+        if distance > 150 then continue end
 
         local playerName = ply:getDarkRPVar("rpname") or ply:Nick()
 
@@ -27,33 +27,35 @@ hook.Add("PostDrawTranslucentRenderables", "DrawPlayerInfo", function()
             local hasLicense = ply:getDarkRPVar("HasGunlicense")
             local arrested = ply:getDarkRPVar("Arrested")
             local wanted = ply:getDarkRPVar("wanted")
+            local speaking = ply:IsSpeaking()
 
-            -- Размеры текста
             surface.SetFont("Overhead")
             local tw, th = surface.GetTextSize(playerName)
 
-            -- Рассчитываем размеры панели
             local iconSize = 30
             local iconPadding = 7
-            local numIcons = (hasLicense and 1 or 0) + (arrested and 1 or 0) + (wanted and 1 or 0)
-            local panelW = tw + 40 + (numIcons * iconSize) + ((numIcons - 1) * iconPadding)
+            local numIcons = (speaking and 1 or 0) + (hasLicense and 1 or 0) + (arrested and 1 or 0) + (wanted and 1 or 0)
+            local panelW = tw + ScreenScale(13) + (numIcons * iconSize) + ((numIcons - 1) * iconPadding)
             local panelH = math.max(th + 15, iconSize)
 
-            -- Позиция панели
-            local startX, startY = ScreenScale(55) -panelW / 2, - panelH / 2
+            local startX, startY =  125, - panelH / 2
 
-            -- Рисуем плашку
             draw.RoundedBox(mi_hud.rounding, startX - 1, startY - 1, panelW + 2, panelH + 2, mi_hud.theme.baseOutline)
             draw.RoundedBox(mi_hud.rounding, startX, startY, panelW, panelH, mi_hud.theme.base)
 
-            -- Рисуем имя игрока
             local textX = startX + ScreenScale(5)
             local textY = startY + (panelH / 2)
             draw.SimpleText(playerName, "Overhead", textX, textY, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
-            -- Рисуем значки справа от имени
             local iconX = textX + tw + 10
             local iconY = startY + (panelH - iconSize) / 2
+
+            if speaking then
+                surface.SetDrawColor(255, 255, 255)
+                surface.SetMaterial(mi_hud.icons.interface.voice)
+                surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
+                iconX = iconX + iconSize + iconPadding
+            end
 
             if hasLicense then
                 surface.SetDrawColor(118, 184, 255)
