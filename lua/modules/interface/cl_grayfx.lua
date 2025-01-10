@@ -1,16 +1,11 @@
 local grayScale = 0
 
-hook.Add("HUDPaint", "HealthToGrayEffect", function()
+function mi_hud.GrayFX()
     local ply = LocalPlayer()
-
     if not IsValid(ply) then return end
-
     local health = ply:Health() / ply:GetMaxHealth()
-
     health = math.Clamp(health, 0, 1)
-
     grayScale = 1 - health
-
     DrawColorModify({
         ["$pp_colour_addr"] = 0,
         ["$pp_colour_addg"] = 0,
@@ -22,4 +17,4 @@ hook.Add("HUDPaint", "HealthToGrayEffect", function()
         ["$pp_colour_mulg"] = 0,
         ["$pp_colour_mulb"] = 0
     })
-end)
+end

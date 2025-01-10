@@ -1,6 +1,6 @@
 local BloodMaterial = Material("resource/fx/bloodfx2.png", "smooth mips")
 
-hook.Add("HUDPaint", "BloodFX", function()
+function mi_hud.BloodFX()
     local ply = LocalPlayer()
     if not IsValid(ply) then return end
 
@@ -12,4 +12,4 @@ hook.Add("HUDPaint", "BloodFX", function()
     surface.SetMaterial(BloodMaterial)
     surface.SetDrawColor(255, 255, 255, Alpha)
     surface.DrawTexturedRect(0, 0, ScrW(), ScrH())
-end)
+end

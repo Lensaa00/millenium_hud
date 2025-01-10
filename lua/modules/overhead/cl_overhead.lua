@@ -4,9 +4,14 @@ hook.Add("PostDrawTranslucentRenderables", "DrawPlayerInfo", function()
     local localPlayer = LocalPlayer()
     local players = player.GetAll()
 
+
+    --[[   ДОБАВИТЬ ПЛАВНОЕ ЗАТЕНЕНИЕ ИСЧЕЗНОВЕНИЯ   ]]
+
+
+
     for _, ply in ipairs(players) do
         if ply == localPlayer or not ply:Alive() or not ply:IsValid() then continue end
-        if localPlayer:GetEyeTrace().Entity ~= ply then continue end
+        -- if localPlayer:GetEyeTrace().Entity ~= ply then continue end
 
         local distance = localPlayer:GetPos():Distance(ply:GetPos())
         if distance > 150 then continue end

@@ -1,4 +1,4 @@
-surface.CreateFont("Notification", {font = 'Nunito Bold', extended = true, size = ScreenScale(6.5)})
+surface.CreateFont("Notification", {font = 'Nunito', extended = true, size = ScreenScale(6.5)})
 
 local notifications = notifications or {}
 local maxMessages = 5
@@ -19,9 +19,9 @@ function Notification(text, type, length)
     panel.NotifTime = CurTime()
     panel.Paint = function(me, w, h)
         draw.RoundedBox(mi_hud.rounding, 0, 0, w, h, mi_hud.notifTypes[type].back)
-        draw.RoundedBox(0, 0, h - 3, w, 23, Color(0,0,0,100))
-        draw.RoundedBox(0, 0, h - 3, w - w / length * (CurTime() - me.NotifTime), 3, mi_hud.notifTypes[type].accent)
-        draw.SimpleText(text, "Notification", w / 2, h / 2 - 2, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.RoundedBox(0, 0, h - h * .07, w, h * .15, Color(0,0,0,100))
+        draw.RoundedBox(0, 0, h - h * .07, w - w / length * (CurTime() - me.NotifTime), h * .15, mi_hud.notifTypes[type].accent)
+        draw.SimpleText(text, "Notification", w / 2, h / 2 - h * .07, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
     table.insert(notifications, panel)

@@ -1,4 +1,5 @@
 mi_hud.config = {}
+mi_hud.icons = {}
 mi_hud.rounding = 0
 mi_hud.config.playerFOV = 70
 mi_hud.config.hideHudElements = {
@@ -8,7 +9,6 @@ mi_hud.config.hideHudElements = {
     ["CHudDamageIndicator"] = true,
     ["CHudCrosshairInfo"] = true
 }
-mi_hud.icons = {}
 mi_hud.icons.interface = {
     hunger = Material("resource/icons/food.png", "smooth mips"),
     job = Material("resource/icons/case.png", "smooth mips"),

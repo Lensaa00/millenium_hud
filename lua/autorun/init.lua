@@ -18,26 +18,21 @@ local function LoadFolder(path)
 
         if prefix == "sv_" then
             if SERVER then
-                print("[SERVER] Including: " .. filePath)
                 include(filePath)
             end
         elseif prefix == "cl_" then
             if SERVER then
-                print("[SERVER] Adding to client: " .. filePath)
                 AddCSLuaFile(filePath)
             end
             if CLIENT then
-                print("[CLIENT] Including: " .. filePath)
                 include(filePath)
             end
         elseif prefix == "sh_" then
             if SERVER then
-                print("[SERVER] Adding to client and including: " .. filePath)
                 AddCSLuaFile(filePath)
                 include(filePath)
             end
             if CLIENT then
-                print("[CLIENT] Including: " .. filePath)
                 include(filePath)
             end
         else
@@ -46,7 +41,6 @@ local function LoadFolder(path)
     end
 
     for _, folderName in ipairs(folders) do
-        print("[INFO] Entering folder: " .. folderName)
         LoadFolder(path .. "/" .. folderName)
     end
 end

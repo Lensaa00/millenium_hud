@@ -1,6 +1,11 @@
-surface.CreateFont("ScoreboardHeader", {font = "Nunito Bold", extended = true, size = ScreenScale(8)})
-surface.CreateFont("ScoreboardText", {font = "Nunito Bold", extended = true, size = ScreenScale(7)})
-surface.CreateFont("ScoreboardButtons", {font = "Nunito", extended = true, size = ScreenScale(5)})
+local function SetupFonts()
+    surface.CreateFont("ScoreboardHeader", {font = "Nunito", extended = true, size = ScreenScale(6)})
+    surface.CreateFont("ScoreboardText", {font = "Nunito Bold", extended = true, size = ScreenScale(7)})
+    surface.CreateFont("ScoreboardTextShadow", {font = "Nunito Bold", blursize = 3, extended = true, size = ScreenScale(7)})
+    surface.CreateFont("ScoreboardButtons", {font = "Nunito", extended = true, size = ScreenScale(6)})
+end
+
+SetupFonts()
 
 local function Scoreboard()
     gui.EnableScreenClicker(true)
@@ -17,7 +22,7 @@ local function Scoreboard()
 
     local header = vgui.Create("DPanel", window)
     header:Dock(TOP)
-    header:SetTall(window:GetTall() * .05)
+    header:SetTall(window:GetTall() * .04)
     header.Paint = function (me, w, h)
         draw.RoundedBox(mi_hud.rounding, 0, 0, w, h, mi_hud.theme.baseOutline)
         draw.SimpleText("Millenium RP | Игроки", "ScoreboardHeader", w / 2, h / 2, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
@@ -51,7 +56,12 @@ local function Scoreboard()
         draw.RoundedBox(100, w * .7, 0, w * .3, h, mi_hud.theme.baseOutline)
     end
 
-    for _, ply in ipairs(player.GetAll()) do
+    local sortedPlayers = player.GetAll() -- Получаем всех игроков
+    table.sort(sortedPlayers, function(a, b)
+        return team.GetName(a:Team()):lower() < team.GetName(b:Team()):lower()
+    end)
+
+    for _, ply in ipairs(sortedPlayers) do
 
         local playerVars = {
             {
@@ -104,15 +114,15 @@ local function Scoreboard()
         playerButton:SetTall(playerPanel:GetTall())
         playerButton:SetText("")
         playerButton.Paint = function (me, w, h)
-            draw.RoundedBox(0, 0, 0, w, h, PJobColor)
-            if me:IsHovered() then
-                surface.SetDrawColor(255,255,255, 20)
-            else
-                surface.SetDrawColor(255,255,255, 10)
+            if me:IsHovered() or playerPanel.Opened then
+                draw.RoundedBox(0, 0, 0, w, h, PJobColor)
             end
+            surface.SetDrawColor(0,0,0, 100)
             surface.SetMaterial(Material("gui/gradient_up", "smooth mips"))
-            surface.DrawTexturedRect(0, 0, w, h)
+            surface.DrawTexturedRect(0, h / 2, w, h / 2)
+            draw.SimpleText(PName, "ScoreboardTextShadow", 10, h / 2 + 1, Color(0,0,0,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
             draw.SimpleText(PName, "ScoreboardText", 10, h / 2, Color(255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            draw.SimpleText(PJob, "ScoreboardTextShadow", w / 2, h / 2 + 1, Color(0,0,0,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             draw.SimpleText(PJob, "ScoreboardText", w / 2, h / 2, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
             surface.SetFont("ScoreboardText")
@@ -124,6 +134,7 @@ local function Scoreboard()
             surface.SetMaterial(mi_hud.icons.scoreboard.network)
             surface.DrawTexturedRect(w - w * .02 - tw - iconSize - iconPadding, h / 2 - iconSize / 2, iconSize, iconSize)
 
+            draw.SimpleText(PPing, "ScoreboardTextShadow", w - w * .02, h / 2 + 1, Color(0,0,0,255), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
             draw.SimpleText(PPing, "ScoreboardText", w - w * .02, h / 2, Color(255,255,255), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
         end
         playerButton.DoClick = function ()

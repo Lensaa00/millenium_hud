@@ -1,15 +1,18 @@
 -- Шрифты
-surface.CreateFont("Logo", {font = "Nunito Black", extended = true, size = ScreenScale(10)})
-surface.CreateFont("Time", {font = "Nunito Black", extended = true, size = ScreenScale(6)})
-surface.CreateFont("Hunger", {font = "Nunito Black", extended = true, size = ScreenScale(9)})
-surface.CreateFont("Text", {font = "Nunito Black", extended = true, size = ScreenScale(8.5)})
-surface.CreateFont("TextShadow", {font = "Nunito Black", extended = true, blursize = 2, size = ScreenScale(8.5)})
-surface.CreateFont("WatermarkTop", {font = "Nunito Black", extended = true, size = ScreenScale(7)})
-surface.CreateFont("WatermarkBottom", {font = "Nunito", extended = true, size = ScreenScale(6)})
-surface.CreateFont("Arrested", {font = "Nunito", extended = true, size = ScreenScale(7.5)})
+local function SetupFonts()
+    surface.CreateFont("Logo", {font = "Nunito", extended = true, size = ScreenScale(10)})
+    surface.CreateFont("Time", {font = "Nunito", extended = true, size = ScreenScale(6)})
+    surface.CreateFont("Hunger", {font = "Nunito", extended = true, size = ScreenScale(9)})
+    surface.CreateFont("Text", {font = "Nunito Black", extended = true, size = ScreenScale(8.5)})
+    surface.CreateFont("TextShadow", {font = "Nunito Black", extended = true, blursize = 2, size = ScreenScale(8.5)})
+    surface.CreateFont("WatermarkTop", {font = "Nunito Black", extended = true, size = ScreenScale(7)})
+    surface.CreateFont("WatermarkBottom", {font = "Nunito", extended = true, size = ScreenScale(6)})
+    surface.CreateFont("Arrested", {font = "Nunito", extended = true, size = ScreenScale(7.5)})
+    surface.CreateFont("HealthArmor", {font = "Nunito Black", extended = true, size = ScreenScale(5)})
+    surface.CreateFont("HealthArmorShadow", {font = "Nunito Black", extended = true, blursize = 2, size = ScreenScale(5)})
+end
 
-surface.CreateFont("HealthArmor", {font = "Nunito Black", extended = true, size = ScreenScale(5)})
-surface.CreateFont("HealthArmorShadow", {font = "Nunito Black", extended = true, blursize = 2, size = ScreenScale(5)})
+SetupFonts()
 
 local SmoothedHealth = 100
 local SmoothedArmor = 100
@@ -160,7 +163,11 @@ function Interface()
 end
 
 -- Хук отрисовки
-hook.Add("HUDPaint", "millenium.interface.draw", Interface)
+hook.Add("HUDPaint", "millenium.interface.draw", function ()
+    mi_hud.GrayFX()
+    mi_hud.BloodFX()
+    Interface()
+end)
 
 -- Хук скрытия информации об игроке у прицела
 hook.Add("HUDDrawTargetID", "HideTargetID", function()
