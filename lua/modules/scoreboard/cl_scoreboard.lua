@@ -1,6 +1,6 @@
 surface.CreateFont("ScoreboardHeader", {font = "Nunito Bold", extended = true, size = ScreenScale(8)})
 surface.CreateFont("ScoreboardText", {font = "Nunito Bold", extended = true, size = ScreenScale(7)})
-surface.CreateFont("ScoreboardButtons", {font = "Nunito Bold", extended = true, size = ScreenScale(6)})
+surface.CreateFont("ScoreboardButtons", {font = "Nunito", extended = true, size = ScreenScale(5)})
 
 local function Scoreboard()
     gui.EnableScreenClicker(true)
@@ -53,6 +53,37 @@ local function Scoreboard()
 
     for _, ply in ipairs(player.GetAll()) do
 
+        local playerVars = {
+            {
+                value = ply:getDarkRPVar("rpname"),
+            },
+            {
+                value = ply:getDarkRPVar("job"),
+            },
+            {
+                value = ply:Ping(),
+                icon = mi_hud.icons.scoreboard.network,
+            }
+        }
+
+        local PlayerOptions = {
+            {
+                name = ply:SteamID(),
+                func = function ()
+                    SetClipboardText(ply:SteamID())
+                    notification.AddLegacy("Вы скопировали SteamID игрока " .. ply:getDarkRPVar("rpname"), NOTIFY_HINT, 3)
+                end
+            },
+            {
+                name = "Открыть профиль Steam",
+                func = function ()
+                    window:Remove()
+                    gui.EnableScreenClicker(false)
+                    gui.OpenURL("https://steamcommunity.com/profiles/" .. ply:SteamID64() .. "/")
+                end
+            }
+        }
+
         local PJobColor = team.GetColor(ply:Team())
         local PName = ply:getDarkRPVar("rpname")
         local PJob = ply:getDarkRPVar("job")
@@ -60,7 +91,7 @@ local function Scoreboard()
 
         local playerPanel = vgui.Create("DPanel", playersScroll)
         playerPanel:Dock(TOP)
-        playerPanel:SetTall(40)
+        playerPanel:SetTall(window:GetTall() * .035)
         playerPanel:DockMargin(0, 0, 0, 5)
         playerPanel.Opened = false
         playerPanel.Paint = function (me, w, h)
@@ -69,15 +100,15 @@ local function Scoreboard()
 
         local playerButton = vgui.Create("DButton", playerPanel)
         playerButton:Dock(TOP)
-        playerButton:DockMargin(40, 0, 0, 0)
+        playerButton:DockMargin(playerPanel:GetTall(), 0, 0, 0)
         playerButton:SetTall(playerPanel:GetTall())
         playerButton:SetText("")
         playerButton.Paint = function (me, w, h)
             draw.RoundedBox(0, 0, 0, w, h, PJobColor)
             if me:IsHovered() then
-                surface.SetDrawColor(255,255,255, 10)
+                surface.SetDrawColor(255,255,255, 20)
             else
-                surface.SetDrawColor(255,255,255, 5)
+                surface.SetDrawColor(255,255,255, 10)
             end
             surface.SetMaterial(Material("gui/gradient_up", "smooth mips"))
             surface.DrawTexturedRect(0, 0, w, h)
@@ -86,7 +117,7 @@ local function Scoreboard()
 
             surface.SetFont("ScoreboardText")
             local tw, th = surface.GetTextSize(PPing)
-            local iconSize = h * .4
+            local iconSize = h * .6
             local iconPadding = 10
 
             surface.SetDrawColor(255,255,255)
@@ -97,52 +128,35 @@ local function Scoreboard()
         end
         playerButton.DoClick = function ()
             if playerPanel.Opened then
-                playerPanel:SizeTo(playerPanel:GetWide(), 40, 1, 0, .1)
+                playerPanel:SizeTo(playerPanel:GetWide(), window:GetTall() * .035, 1, 0, .1)
                 playerPanel.Opened = false
             else
-                playerPanel:SizeTo(playerPanel:GetWide(), 150, 1, 0, .1)
+                playerPanel:SizeTo(playerPanel:GetWide(), window:GetTall() * .15, 1, 0, .1)
                 playerPanel.Opened = true
             end
         end
 
+        -- Аватар игрока
         local playerAvatar = vgui.Create("AvatarImage", playerPanel)
-        playerAvatar:SetSize(40, 40)
+        playerAvatar:SetSize(playerPanel:GetTall(), playerPanel:GetTall())
         playerAvatar:SetPos(0, 0)
         playerAvatar:SetPlayer(ply, 64)
 
-        local playerCopySteamId = vgui.Create("DButton", playerPanel)
-        playerCopySteamId:Dock(TOP)
-        playerCopySteamId:SetText("")
-        playerCopySteamId:SetTall(30)
-        playerCopySteamId:DockMargin(10, 10, 10, 0)
-        playerCopySteamId.Paint = function (me, w, h)
-            draw.RoundedBox(0, 0, 0, w, h, mi_hud.theme.base)
-            if me:IsHovered() then
-                draw.RoundedBox(0, 0, 0, w, h, Color(255,255,255, 2.5))
+        -- Добавление кнопок у пользователя
+        for _, option in ipairs(PlayerOptions) do
+            local button = vgui.Create("DButton", playerPanel)
+            button:Dock(TOP)
+            button:DockMargin(5, 5, 5, 0)
+            button:SetTall(25)
+            button:SetText("")
+            button.DoClick = option.func
+            button.Paint = function (me, w, h)
+                draw.RoundedBox(0, 0, 0, w, h, mi_hud.theme.base)
+                if me:IsHovered() then
+                    draw.RoundedBox(0, 0, 0, w, h, Color(mi_hud.theme.baseOutline.r, mi_hud.theme.baseOutline.g, mi_hud.theme.baseOutline.b, 50))
+                end
+                draw.SimpleText(option.name, "ScoreboardButtons", w * .01, h / 2, Color(255,255,255), TEXT_ALIGN_LEFT,TEXT_ALIGN_CENTER)
             end
-            draw.SimpleText(ply:SteamID(), "ScoreboardButtons", 10, h / 2, Color(255,255,255),TEXT_ALIGN_LEFT,TEXT_ALIGN_CENTER)
-        end
-        playerCopySteamId.DoClick = function ()
-            notification.AddLegacy("Вы скопировали SteamID игрока " .. ply:getDarkRPVar("rpname"), NOTIFY_HINT, 5)
-            SetClipboardText(ply:SteamID())
-        end
-
-        local playerOpenProfile = vgui.Create("DButton", playerPanel)
-        playerOpenProfile:Dock(TOP)
-        playerOpenProfile:SetText("")
-        playerOpenProfile:SetTall(30)
-        playerOpenProfile:DockMargin(10, 10, 10, 0)
-        playerOpenProfile.Paint = function (me, w, h)
-            draw.RoundedBox(0, 0, 0, w, h, mi_hud.theme.base)
-            if me:IsHovered() then
-                draw.RoundedBox(0, 0, 0, w, h, Color(255,255,255, 2.5))
-            end
-            draw.SimpleText("Открыть профиль Steam", "ScoreboardButtons", 10, h / 2, Color(255,255,255),TEXT_ALIGN_LEFT,TEXT_ALIGN_CENTER)
-        end
-        playerOpenProfile.DoClick = function ()
-            window:Remove()
-            gui.EnableScreenClicker(false)
-            gui.OpenURL("https://steamcommunity.com/profiles/" .. ply:SteamID64() .. "/")
         end
 
     end

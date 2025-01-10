@@ -1,6 +1,6 @@
 mi_hud.config = {}
 mi_hud.rounding = 0
-mi_hud.config.playerFOV = 75
+mi_hud.config.playerFOV = 70
 mi_hud.config.hideHudElements = {
     ["CHudHealth"] = true,
     ["CHudBattery"] = true,

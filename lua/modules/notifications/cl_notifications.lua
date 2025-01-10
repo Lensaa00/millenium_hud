@@ -1,7 +1,7 @@
 surface.CreateFont("Notification", {font = 'Nunito Bold', extended = true, size = ScreenScale(6.5)})
 
 local notifications = notifications or {}
-local maxMessages = 6
+local maxMessages = 5
 
 local function CopyColor(color)
     return Color(color.r, color.g, color.b, color.a)
@@ -9,19 +9,15 @@ end
 
 function Notification(text, type, length)
     surface.SetFont("Notification")
-    if length < 5 then length = 5 end
     local scrw, scrh = ScrW(), ScrH()
     local tw, th = surface.GetTextSize(text)
     local padding = ScreenScale(5)
 
     local panel = vgui.Create("DPanel")
     panel:SetSize(tw + padding * 2, th + padding)
-    panel:SetPos(scrw - panel:GetWide() - 10, scrh)
-    panel:SetAlpha(0)
-    panel:AlphaTo(255, 1, 0)
+    panel:SetPos(scrw - panel:GetWide() - 10, scrh + panel:GetTall())
     panel.NotifTime = CurTime()
     panel.Paint = function(me, w, h)
-        -- draw.RoundedBox(8, 0, 0, w, h, mi_hud.notifTypes[type].outline)
         draw.RoundedBox(mi_hud.rounding, 0, 0, w, h, mi_hud.notifTypes[type].back)
         draw.RoundedBox(0, 0, h - 3, w, 23, Color(0,0,0,100))
         draw.RoundedBox(0, 0, h - 3, w - w / length * (CurTime() - me.NotifTime), 3, mi_hud.notifTypes[type].accent)
@@ -31,13 +27,12 @@ function Notification(text, type, length)
     table.insert(notifications, panel)
 
     local function UpdatePositions()
-        local currentY = scrh - 10
+        local currentY = scrh - scrh * .02
         for i = #notifications, 1, -1 do
             local notif = notifications[i]
             if IsValid(notif) then
-                -- notif:AlphaTo(255, .25, 0)
-                notif:MoveTo(scrw - notif:GetWide() - 10, currentY - notif:GetTall(), 1.5, 0, 0.1)
-                currentY = currentY - notif:GetTall() - scrh * .005
+                notif:MoveTo(scrw - notif:GetWide() - 10, currentY - notif:GetTall(), .8, 0, .1)
+                currentY = currentY - notif:GetTall() - scrh * .003
             end
         end
     end
@@ -46,14 +41,13 @@ function Notification(text, type, length)
         local oldPanel = table.remove(notifications, 1)
         if IsValid(oldPanel) then
             local x, y = oldPanel:GetPos()
-            oldPanel:AlphaTo(0, .25, 0)
-            oldPanel:MoveTo(x, y - oldPanel:GetTall() - 20, 1.5, 0, .1, function ()
+            oldPanel:AlphaTo(0, .2, 0)
+            oldPanel:MoveTo(x, y - oldPanel:GetTall() - 10, 1, 0, .1, function ()
                 if IsValid(oldPanel) then
                     oldPanel:Remove()
                 end
             end)
         end
-        UpdatePositions()
     end
 
     UpdatePositions()
@@ -63,10 +57,8 @@ function Notification(text, type, length)
             local panelX, panelY = panel:GetPos()
             table.RemoveByValue(notifications, panel)
             UpdatePositions()
-            panel:MoveTo(scrw - panel:GetWide() - 20, panelY, .25, 0, .1, function ()
-                panel:MoveTo(scrw + panel:GetWide(), panelY, 1, 0, .1, function ()
-                    panel:Remove()
-                end)
+            panel:MoveTo(scrw + panel:GetWide(), panelY, .5, 0, 4, function ()
+                panel:Remove()
             end)
 
         end

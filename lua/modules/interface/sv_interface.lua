@@ -1,5 +1,5 @@
 hook.Add("PlayerSpawn", "FOVChange", function ( ply )
-    ply:SetFOV(mi_hud.config.playerFOV, 0)
+    ply:SetFOV(mi_hud.config.playerFOV)
 end)
 
 hook.Add("playerArrested", "SyncArrestTimeToClient", function(criminal, time, actor)
