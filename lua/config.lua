@@ -22,14 +22,14 @@ mi_hud.config = {
 
 -- Иконки: Интерфейсные
 mi_hud.icons.interface = {
-    hunger = Material("materials/icons/food.png", "smooth mips"),
-    job = Material("materials/icons/case.png", "smooth mips"),
-    money = Material("materials/icons/money.png", "smooth mips"),
-    license = Material("materials/icons/license.png", "smooth mips"),
-    warning = Material("materials/icons/warning.png", "smooth mips"),
-    arrested = Material("materials/icons/arrested.png", "smooth mips"),
-    wanted = Material("materials/icons/wanted.png", "smooth mips"),
-    voice = Material("materials/icons/voice.png", "smooth mips"),
+    hunger = Material("materials/millenium_hud/icons/food.png", "smooth mips"),
+    job = Material("materials/millenium_hud/icons/case.png", "smooth mips"),
+    money = Material("materials/millenium_hud/icons/money.png", "smooth mips"),
+    license = Material("materials/millenium_hud/icons/license.png", "smooth mips"),
+    warning = Material("materials/millenium_hud/icons/warning.png", "smooth mips"),
+    arrested = Material("materials/millenium_hud/icons/arrested.png", "smooth mips"),
+    wanted = Material("materials/millenium_hud/icons/wanted.png", "smooth mips"),
+    voice = Material("materials/millenium_hud/icons/voice.png", "smooth mips"),
 }
 
 -- Иконки: Таблица игроков
