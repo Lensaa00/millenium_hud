@@ -5,7 +5,7 @@ mi_hud.rounding = 0
 
 -- Конфигурация: Общие настройки
 mi_hud.config = {
-    playerFOV = 70, -- Поле зрения игрока
+    playerFOV = 75, -- Поле зрения игрока
     hideHudElements = { -- Скрываемые элементы HUD
         ["CHudHealth"] = true,
         ["CHudBattery"] = true,

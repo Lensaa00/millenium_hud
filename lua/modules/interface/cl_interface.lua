@@ -170,6 +170,7 @@ hook.Add("HUDPaint", "millenium.interface.draw", function ()
     mi_hud.effects.GrayFX() -- эффект серого экрана при низком ХП
     mi_hud.effects.BloodFX() -- эффект крови при низком ХП
     Interface() -- Интерфейс
+    mi_hud.DeathScreen()
 end)
 
 -- Хук скрытия информации об игроке у прицела

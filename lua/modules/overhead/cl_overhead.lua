@@ -2,7 +2,7 @@ surface.CreateFont("Overhead", {font = "Nunito Bold", extended = true, size = Sc
 
 local playerAlpha = {} -- Таблица для хранения прозрачности для каждого игрока
 
-hook.Add("PostDrawTranslucentRenderables", "DrawPlayerInfo", function()
+hook.Add("PostDrawTranslucentRenderables", "millenium.overhead.draw", function()
     local localPlayer = LocalPlayer()
     local players = player.GetAll()
 
