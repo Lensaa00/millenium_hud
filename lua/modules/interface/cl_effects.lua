@@ -20,7 +20,7 @@ function mi_hud.effects.GrayFX()
 end
 
 function mi_hud.effects.BloodFX()
-    local BloodMaterial = Material("resource/fx/bloodfx2.png", "smooth mips")
+    local BloodMaterial = Material("materials/millenium_hud/fx/bloodfx2.png", "smooth mips")
 
     local ply = LocalPlayer()
     if not IsValid(ply) then return end
