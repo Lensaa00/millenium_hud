@@ -1,6 +1,6 @@
-local grayScale = 0
-
-function mi_hud.GrayFX()
+mi_hud.effects = {}
+function mi_hud.effects.GrayFX()
+    local grayScale = 0
     local ply = LocalPlayer()
     if not IsValid(ply) then return end
     local health = ply:Health() / ply:GetMaxHealth()
@@ -18,3 +18,20 @@ function mi_hud.GrayFX()
         ["$pp_colour_mulb"] = 0
     })
 end
+
+function mi_hud.effects.BloodFX()
+    local BloodMaterial = Material("resource/fx/bloodfx2.png", "smooth mips")
+
+    local ply = LocalPlayer()
+    if not IsValid(ply) then return end
+
+    local health = ply:Health() / ply:GetMaxHealth()
+    health = math.Clamp(health, 0, 1)
+
+    local Alpha = (1 - health) * 30
+
+    surface.SetMaterial(BloodMaterial)
+    surface.SetDrawColor(255, 255, 255, Alpha)
+    surface.DrawTexturedRect(0, 0, ScrW(), ScrH())
+end
+

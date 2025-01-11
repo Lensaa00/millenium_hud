@@ -1,49 +1,50 @@
 util.AddNetworkString("ShowDarkRPMessage")
 
-hook.Add("playerWanted", "WantedHook", function (criminal, actor, reason)
-    local text = "\"" .. criminal:getDarkRPVar("rpname") .. "\" розыскивается полицией!"
+-- Функция отправки сообщения на клиент
+local function SendDarkRPMessage(text)
     net.Start("ShowDarkRPMessage")
-        net.WriteString(text)
+    net.WriteString(text)
     net.Broadcast()
-    return
+end
+
+-- Функция получения имени игрока
+local function GetRPName(player)
+    return player:getDarkRPVar("rpname") or "Неизвестный игрок"
+end
+
+-- Хук розыска
+hook.Add("playerWanted", "WantedHook", function(criminal, actor, reason)
+    local text = string.format("\"%s\" розыскивается полицией!", GetRPName(criminal))
+    SendDarkRPMessage(text)
 end)
 
-hook.Add("playerUnWanted", "UnWantedHook", function (criminal, actor)
-    local text = "\"" .. criminal:getDarkRPVar("rpname") .. "\" больше не розыскивается полицией."
-    net.Start("ShowDarkRPMessage")
-        net.WriteString(text)
-    net.Broadcast()
-    return
+-- Хук отмены розыска
+hook.Add("playerUnWanted", "UnWantedHook", function(criminal, actor)
+    local text = string.format("\"%s\" больше не розыскивается полицией.", GetRPName(criminal))
+    SendDarkRPMessage(text)
 end)
 
-hook.Add("playerArrested", "ArrestedHook", function (criminal, time, actor)
-    local text = "\"" .. criminal:getDarkRPVar("rpname") .. "\" был арестован на " .. time .. " секунд."
-    net.Start("ShowDarkRPMessage")
-        net.WriteString(text)
-    net.Broadcast()
-    return
+-- Хук ареста
+hook.Add("playerArrested", "ArrestedHook", function(criminal, time, actor)
+    if criminal:GetNWInt("ArrestTime") ~= 0 then return end
+    local text = string.format("\"%s\" был арестован на %d секунд.", GetRPName(criminal), time)
+    SendDarkRPMessage(text)
 end)
 
-hook.Add("playerUnArrested", "UnArrestedHook", function (criminal, actor)
-    local text = "\"" .. criminal:getDarkRPVar("rpname") .. "\" был выпущен из тюрьмы."
-    net.Start("ShowDarkRPMessage")
-        net.WriteString(text)
-    net.Broadcast()
-    return
+-- Хук отмены ареста
+hook.Add("playerUnArrested", "UnArrestedHook", function(criminal, actor)
+    local text = string.format("\"%s\" был выпущен из тюрьмы.", GetRPName(criminal))
+    SendDarkRPMessage(text)
 end)
 
-hook.Add("playerWarranted", "WarrantHook", function (criminal, actor)
-    local text = "Полиция получила ордер на обыск \"" .. criminal:getDarkRPVar("rpname") .. "\"."
-    net.Start("ShowDarkRPMessage")
-        net.WriteString(text)
-    net.Broadcast()
-    return
+-- Хук выдачи ордера
+hook.Add("playerWarranted", "WarrantHook", function(criminal, actor)
+    local text = string.format("Полиция получила ордер на обыск \"%s\".", GetRPName(criminal))
+    SendDarkRPMessage(text)
 end)
 
-hook.Add("playerUnWarranted", "UnWarrantHook", function (criminal, actor)
-    local text = "Ордер на обыск \"" .. criminal:getDarkRPVar("rpname") .. "\" был аннулирован."
-    net.Start("ShowDarkRPMessage")
-        net.WriteString(text)
-    net.Broadcast()
-    return
+-- Хук отмены ордера
+hook.Add("playerUnWarranted", "UnWarrantHook", function(criminal, actor)
+    local text = string.format("Ордер на обыск \"%s\" был аннулирован.", GetRPName(criminal))
+    SendDarkRPMessage(text)
 end)
