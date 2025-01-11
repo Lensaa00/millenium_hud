@@ -22,19 +22,19 @@ mi_hud.config = {
 
 -- Иконки: Интерфейсные
 mi_hud.icons.interface = {
-    hunger = Material("resource/icons/food.png", "smooth mips"),
-    job = Material("resource/icons/case.png", "smooth mips"),
-    money = Material("resource/icons/money.png", "smooth mips"),
-    license = Material("resource/icons/license.png", "smooth mips"),
-    warning = Material("resource/icons/warning.png", "smooth mips"),
-    arrested = Material("resource/icons/arrested.png", "smooth mips"),
-    wanted = Material("resource/icons/wanted.png", "smooth mips"),
-    voice = Material("resource/icons/voice.png", "smooth mips"),
+    hunger = Material("materials/millenium_hud/icons/food.png", "smooth mips"),
+    job = Material("materials/millenium_hud/icons/case.png", "smooth mips"),
+    money = Material("materials/millenium_hud/icons/money.png", "smooth mips"),
+    license = Material("materials/millenium_hud/icons/license.png", "smooth mips"),
+    warning = Material("materials/millenium_hud/icons/warning.png", "smooth mips"),
+    arrested = Material("materials/millenium_hud/icons/arrested.png", "smooth mips"),
+    wanted = Material("materials/millenium_hud/icons/wanted.png", "smooth mips"),
+    voice = Material("materials/millenium_hud/icons/voice.png", "smooth mips"),
 }
 
 -- Иконки: Таблица игроков
 mi_hud.icons.scoreboard = {
-    network = Material("resource/icons/network.png", "smooth mips"),
+    network = Material("materials/millenium_hud/icons/network.png", "smooth mips"),
 }
 
 -- Темы и цвета
