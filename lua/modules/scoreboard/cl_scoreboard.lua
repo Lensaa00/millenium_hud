@@ -1,8 +1,8 @@
 local function SetupFonts()
-    surface.CreateFont("ScoreboardHeader", {font = "Nunito Regular", extended = true, size = ScreenScale(6)})
-    surface.CreateFont("ScoreboardText", {font = "Nunito Bold", extended = true, size = ScreenScale(7)})
-    surface.CreateFont("ScoreboardTextShadow", {font = "Nunito Bold", blursize = 3, extended = true, size = ScreenScale(7)})
-    surface.CreateFont("ScoreboardButtons", {font = "Nunito", extended = true, size = ScreenScale(6)})
+    surface.CreateFont("ScoreboardHeader", {font = "Montserrat Regular", extended = true, size = ScreenScale(6)})
+    surface.CreateFont("ScoreboardText", {font = "Montserrat", extended = true, size = ScreenScale(6)})
+    surface.CreateFont("ScoreboardTextShadow", {font = "Montserrat", blursize = 3, extended = true, size = ScreenScale(6)})
+    surface.CreateFont("ScoreboardButtons", {font = "Montserrat", extended = true, size = ScreenScale(6)})
 end
 
 SetupFonts()
@@ -10,7 +10,7 @@ SetupFonts()
 local function CreatePlayerRow(parent, ply)
     local panel = vgui.Create("DPanel", parent)
     panel:Dock(TOP)
-    panel:SetTall(ScrH() * .035)
+    panel:SetTall(ScrH() * .025)
     panel:DockMargin(0, 0, 0, 5)
     panel.Opened = false
     panel.Paint = function(me, w, h)
@@ -44,15 +44,15 @@ local function CreatePlayerRow(parent, ply)
 
         surface.SetDrawColor(255, 255, 255)
         surface.SetMaterial(mi_hud.icons.scoreboard.network)
-        surface.DrawTexturedRect(w - w * .02 - tw - iconSize - iconPadding, h / 2 - iconSize / 2, iconSize, iconSize)
+        surface.DrawTexturedRect(w - w * .015 - tw - iconSize - iconPadding, h / 2 - iconSize / 2, iconSize, iconSize)
 
-        draw.SimpleText(PPing, "ScoreboardTextShadow", w - w * .02, h / 2 + 1, Color(0, 0, 0, 255), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
-        draw.SimpleText(PPing, "ScoreboardText", w - w * .02, h / 2, Color(255, 255, 255), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+        draw.SimpleText(PPing, "ScoreboardTextShadow", w - w * .015, h / 2 + 1, Color(0, 0, 0, 255), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+        draw.SimpleText(PPing, "ScoreboardText", w - w * .015, h / 2, Color(255, 255, 255), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
     end
 
     button.DoClick = function()
         if panel.Opened then
-            panel:SizeTo(panel:GetWide(), ScrH() * .035, 0.3, 0, 0.1)
+            panel:SizeTo(panel:GetWide(), ScrH() * .025, 0.3, 0, 0.1)
             panel.Opened = false
         else
             panel:SizeTo(panel:GetWide(), ScrH() * .15, 0.3, 0, 0.1)

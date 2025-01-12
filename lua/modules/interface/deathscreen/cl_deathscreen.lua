@@ -1,8 +1,8 @@
 local function SetupFonts()
-    surface.CreateFont("DeathScreen.Main", {font = "Nunito Bold", extended = true, size = ScreenScale(15)})
-    surface.CreateFont("DeathScreen.Main.Shadow", {font = "Nunito Bold", extended = true, blursize = 10, size = ScreenScale(15)})
-    surface.CreateFont("DeathScreen.Second", {font = "Nunito", extended = true, size = ScreenScale(8)})
-    surface.CreateFont("DeathScreen.Second.Shadow", {font = "Nunito", extended = true, blursize = 5, size = ScreenScale(8)})
+    surface.CreateFont("DeathScreen.Main", {font = "Montserrat Bold", extended = true, size = ScreenScale(15)})
+    surface.CreateFont("DeathScreen.Main.Shadow", {font = "Montserrat Bold", extended = true, blursize = 10, size = ScreenScale(15)})
+    surface.CreateFont("DeathScreen.Second", {font = "Montserrat", extended = true, size = ScreenScale(8)})
+    surface.CreateFont("DeathScreen.Second.Shadow", {font = "Montserrat", extended = true, blursize = 5, size = ScreenScale(8)})
 end
 
 SetupFonts()

@@ -1,4 +1,4 @@
-surface.CreateFont("Notification", {font = "Nunito", extended = true, size = ScreenScale(6)})
+surface.CreateFont("Notification", {font = "Montserrat", extended = true, size = ScreenScale(6)})
 
 local notifications = notifications or {}
 local maxMessages = 5

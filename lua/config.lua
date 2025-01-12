@@ -2,6 +2,7 @@ mi_hud.config = {}
 mi_hud.icons = {}
 mi_hud.theme = {}
 mi_hud.rounding = 0
+mi_hud.drawDistance = 150
 
 -- Конфигурация: Общие настройки
 mi_hud.config = {

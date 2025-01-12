@@ -1,7 +1,7 @@
 local messages = messages or {}
 local isDisplaying = false
 
-surface.CreateFont("MessageText", {font = "Nunito", extended = true, size = ScreenScale(6)})
+surface.CreateFont("MessageText", {font = "Montserrat", extended = true, size = ScreenScale(6)})
 
 local function displayNextMessage()
     if isDisplaying or #messages == 0 then return end

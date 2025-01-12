@@ -1,4 +1,4 @@
-surface.CreateFont("Overhead", {font = "Nunito Bold", extended = true, size = ScreenScale(14)})
+surface.CreateFont("Overhead", {font = "Montserrat", extended = true, size = ScreenScale(15)})
 
 local playerAlpha = {} -- Таблица для хранения прозрачности для каждого игрока
 

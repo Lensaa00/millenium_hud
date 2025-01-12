@@ -1,4 +1,5 @@
 mi_hud = {}
+mi_hud.elements = {}
 
 if SERVER then
     include("config.lua")
