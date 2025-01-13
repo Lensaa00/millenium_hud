@@ -1,12 +1,9 @@
-surface.CreateFont("DoorHeader", {font = "Montserrat Bold", size = 40, extended = true, antialias = true})
-surface.CreateFont("DoorSubHeader", {font = "Montserrat", size = 30, extended = true, antialias = true})
-surface.CreateFont("DoorHeaderShadow", {font = "Montserrat Bold", size = 40, blursize = 4, extended = true, antialias = true})
-surface.CreateFont("DoorSubHeaderShadow", {font = "Montserrat", size = 30, blursize = 4, extended = true, antialias = true})
-
 local ply = LocalPlayer()
 local Cache = {}
 
 local function Draw2D3DDoor(door)
+    if not IsValid(door) then return end -- Ensure the door is valid
+
     -- Door position and angles
     local DoorData = {}
     local DoorAngles = door:GetAngles()
@@ -109,11 +106,11 @@ local function Draw2D3DDoor(door)
     cam.End3D()
 end
 
-hook.Add("RenderScreenspaceEffects", "millenium_hud.doors.draw", function()
-    local entities = ents.FindInSphere(ply:EyePos(), 280)
+hook.Add("RenderScreenspaceEffects", "millenium_hud.doors.draw", function( )
+    local entities = ents.FindInSphere(LocalPlayer():EyePos(), mi_hud.drawDistance)
 
     for _, curEnt in ipairs(entities) do
-        if curEnt:isDoor() and curEnt:GetClass() != "prop_dynamic" and not curEnt:GetNoDraw() then
+        if IsValid(curEnt) and curEnt:isDoor() and curEnt:GetClass() != "prop_dynamic" and not curEnt:GetNoDraw() then
             Draw2D3DDoor(curEnt)
         end
     end

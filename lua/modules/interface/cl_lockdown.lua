@@ -1,4 +1,5 @@
 function mi_hud.elements:Lockdown()
+    local scrw, scrh = ScrW(), ScrH()
     if GetGlobalBool("DarkRP_LockDown", false) then
         local lines = {
             "Мэр ввел комендантский час.",

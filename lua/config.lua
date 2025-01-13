@@ -1,10 +1,13 @@
 mi_hud.config = {}
 mi_hud.icons = {}
 mi_hud.theme = {}
+mi_hud.scoreboard = {}
 mi_hud.rounding = 0
 mi_hud.drawDistance = 150
 
--- Конфигурация: Общие настройки
+--[[======================
+КОНФИГУРАЦИЯ
+==========================]]
 mi_hud.config = {
     playerFOV = 75, -- Поле зрения игрока
     hideHudElements = { -- Скрываемые элементы HUD
@@ -21,7 +24,11 @@ mi_hud.config = {
     }
 }
 
--- Иконки: Интерфейсные
+
+--[[======================
+ИКОНКИ
+==========================]]
+-- Худ
 mi_hud.icons.interface = {
     hunger = Material("materials/millenium_hud/icons/food.png", "smooth mips"),
     job = Material("materials/millenium_hud/icons/case.png", "smooth mips"),
@@ -33,45 +40,62 @@ mi_hud.icons.interface = {
     voice = Material("materials/millenium_hud/icons/voice.png", "smooth mips"),
 }
 
--- Иконки: Таблица игроков
+-- Таблица игроков
 mi_hud.icons.scoreboard = {
     network = Material("materials/millenium_hud/icons/network.png", "smooth mips"),
 }
 
--- Темы и цвета
+-- Клиентская часть
+if not CLIENT then return end
+
+--[[======================
+УВЕДОМЛЕНИЯ
+==========================]]
+
+mi_hud.notifTypes = {
+    [NOTIFY_CLEANUP] = {
+        accent = Color(72, 161, 255), -- Акцентный цвет
+        back = Color(29, 56, 85), -- Фон уведомления
+    },
+    [NOTIFY_ERROR] = {
+        accent = Color(255, 60, 60),
+        back = Color(84, 43, 43),
+    },
+    [NOTIFY_GENERIC] = {
+        accent = Color(255, 222, 60),
+        back = Color(106, 88, 30, 210),
+    },
+    [NOTIFY_HINT] = {
+        accent = Color(72, 161, 255),
+        back = Color(29, 56, 85),
+    },
+    [NOTIFY_UNDO] = {
+        accent = Color(195, 195, 195),
+        back = Color(51, 51, 51),
+    },
+    ["NOTIFY_DARKRP"] = {
+        accent = Color(195, 195, 195),
+        back = Color(51, 51, 51),
+    },
+}
+
+--[[======================
+ТЕМЫ
+==========================]]
+
+-- Тема худа
 mi_hud.theme = {
     base = Color(46, 53, 80, 255), -- Основной цвет
     baseOutline = Color(70, 80, 122, 255), -- Обводка
     header = Color(51, 69, 96, 255), -- Заголовок
 }
 
--- Клиентская часть
-if CLIENT then
-    -- Типы уведомлений
-    mi_hud.notifTypes = {
-        [NOTIFY_CLEANUP] = {
-            accent = Color(72, 161, 255), -- Акцентный цвет
-            back = Color(29, 56, 85), -- Фон уведомления
-        },
-        [NOTIFY_ERROR] = {
-            accent = Color(255, 60, 60),
-            back = Color(84, 43, 43),
-        },
-        [NOTIFY_GENERIC] = {
-            accent = Color(255, 222, 60),
-            back = Color(106, 88, 30, 210),
-        },
-        [NOTIFY_HINT] = {
-            accent = Color(72, 161, 255),
-            back = Color(29, 56, 85),
-        },
-        [NOTIFY_UNDO] = {
-            accent = Color(195, 195, 195),
-            back = Color(51, 51, 51),
-        },
-        ["NOTIFY_DARKRP"] = {
-            accent = Color(195, 195, 195),
-            back = Color(51, 51, 51),
-        },
-    }
-end
+-- Тема таба
+mi_hud.scoreboard.theme = {
+    base = Color(34, 38, 56, 230), -- Основной цвет
+    panel = Color(55, 62, 90, 230), -- Основной цвет
+    baseOutline = Color(70, 80, 122, 230), -- Обводка
+    outline = Color(70, 80, 122, 255), -- Обводка
+    header = Color(70, 80, 122, 230), -- Заголовок
+    text = Color(255,255,255), -- Цвет текста
+}

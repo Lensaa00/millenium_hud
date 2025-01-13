@@ -1,146 +1,180 @@
-local function SetupFonts()
-    surface.CreateFont("ScoreboardHeader", {font = "Montserrat Regular", extended = true, size = ScreenScale(6)})
-    surface.CreateFont("ScoreboardText", {font = "Montserrat", extended = true, size = ScreenScale(6)})
-    surface.CreateFont("ScoreboardTextShadow", {font = "Montserrat", blursize = 3, extended = true, size = ScreenScale(6)})
-    surface.CreateFont("ScoreboardButtons", {font = "Montserrat", extended = true, size = ScreenScale(6)})
-end
+surface.CreateFont("mi.sb.header", { font = "Montserrat", extended = true, size = ScreenScale(7), antialias = true})
+surface.CreateFont("mi.sb.text", { font = "Montserrat", extended = true, size = ScreenScale(6), antialias = true})
+surface.CreateFont("mi.sb.text.shadow", { font = "Montserrat", extended = true, size = ScreenScale(6), antialias = true})
 
-SetupFonts()
+local function createPlayerPanel( ply, parent, height )
+    if not ply or not IsValid(ply) then return end
+    if not parent then return end
+    if not height then return end
 
-local function CreatePlayerRow(parent, ply)
+    local animationSmooth = 10
+
+    local PlayerName = ply:getDarkRPVar("rpname")
+    local PlayerJob = ply:getDarkRPVar("job")
+    local PlayerTeamColor = team.GetColor(ply:Team())
+    local PlayerPing = ply:Ping()
+    local PlayerSteam = ply:SteamID()
+
     local panel = vgui.Create("DPanel", parent)
     panel:Dock(TOP)
-    panel:SetTall(ScrH() * .025)
-    panel:DockMargin(0, 0, 0, 5)
-    panel.Opened = false
-    panel.Paint = function(me, w, h)
-        draw.RoundedBox(mi_hud.rounding, 0, 0, w, h, Color(0, 0, 0, 100))
-    end
+    panel:DockMargin(5, 0, 5, 5)
+    panel:SetTall(height)
+    panel.Paint = function () end
+    panel.ClosedHeight = height
+    panel.Closed = true
+    panel.Paint = function (me, w, h)
+        draw.RoundedBox(0, 0, 0, w, h, mi_hud.scoreboard.theme.outline)
+        draw.RoundedBox(0, 1, 1, w - 2, h - 2, mi_hud.scoreboard.theme.panel)
 
-    local PJobColor = team.GetColor(ply:Team())
-    local PName = ply:getDarkRPVar("rpname")
-    local PJob = ply:getDarkRPVar("job")
-    local PPing = ply:Ping()
-
-    local button = vgui.Create("DButton", panel)
-    button:Dock(TOP)
-    button:DockMargin(panel:GetTall(), 0, 0, 0)
-    button:SetTall(panel:GetTall())
-    button:SetText("")
-    button.Paint = function(me, w, h)
-        if me:IsHovered() or panel.Opened then
-            draw.RoundedBox(mi_hud.rounding, 0, 0, w, h, PJobColor)
-        end
-
-        draw.SimpleText(PName, "ScoreboardTextShadow", 10, h / 2 + 1, Color(0, 0, 0, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-        draw.SimpleText(PName, "ScoreboardText", 10, h / 2, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-        draw.SimpleText(PJob, "ScoreboardTextShadow", w / 2, h / 2 + 1, Color(0, 0, 0, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        draw.SimpleText(PJob, "ScoreboardText", w / 2, h / 2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-
-        surface.SetFont("ScoreboardText")
-        local tw = surface.GetTextSize(PPing)
-        local iconSize = h * .6
-        local iconPadding = 10
-
-        surface.SetDrawColor(255, 255, 255)
-        surface.SetMaterial(mi_hud.icons.scoreboard.network)
-        surface.DrawTexturedRect(w - w * .015 - tw - iconSize - iconPadding, h / 2 - iconSize / 2, iconSize, iconSize)
-
-        draw.SimpleText(PPing, "ScoreboardTextShadow", w - w * .015, h / 2 + 1, Color(0, 0, 0, 255), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
-        draw.SimpleText(PPing, "ScoreboardText", w - w * .015, h / 2, Color(255, 255, 255), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
-    end
-
-    button.DoClick = function()
-        if panel.Opened then
-            panel:SizeTo(panel:GetWide(), ScrH() * .025, 0.3, 0, 0.1)
-            panel.Opened = false
-        else
-            panel:SizeTo(panel:GetWide(), ScrH() * .15, 0.3, 0, 0.1)
-            panel.Opened = true
-        end
+        surface.SetDrawColor(0,0,0,50)
+        surface.SetMaterial(Material("gui/gradient_down", "smooth mips"))
+        surface.DrawTexturedRect(0,panel.ClosedHeight,w, 20)
     end
 
     local avatar = vgui.Create("AvatarImage", panel)
-    avatar:SetSize(panel:GetTall(), panel:GetTall())
-    avatar:SetPos(0, 0)
-    avatar:SetPlayer(ply, 64)
+    avatar:SetPlayer( ply, 64 )
+    avatar:SetSize( panel.ClosedHeight, panel.ClosedHeight )
 
-    local options = {
-        {
-            name = "Скопировать SteamID",
-            func = function()
-                SetClipboardText(ply:SteamID())
-                notification.AddLegacy("Вы скопировали SteamID игрока " .. PName, NOTIFY_HINT, 3)
-            end
-        },
-        {
-            name = "Открыть профиль Steam",
-            func = function()
-                gui.OpenURL("https://steamcommunity.com/profiles/" .. ply:SteamID64() .. "/")
-                window:Remove()
-                gui.EnableScreenClicker( false )
-            end
-        }
-    }
+    local button = vgui.Create("DButton", panel)
+    button:Dock(TOP )
+    button:SetTall(panel.ClosedHeight)
+    button:SetText("")
+    button:DockMargin(panel.ClosedHeight, 0, 0, 0)
+    button.DefaultAlpha = 30
+    button.HoveredAlpha = 100
+    button.CurAlpha = button.DefaultAlpha
+    button.Paint = function (me, w, h)
+        local gradient = Material("gui/gradient_up")
+        local color = PlayerTeamColor
+        color.a = button.CurAlpha
 
-    for _, option in ipairs(options) do
-        local optBtn = vgui.Create("DButton", panel)
-        optBtn:Dock(TOP)
-        optBtn:DockMargin(5, 5, 5, 0)
-        optBtn:SetTall(25)
-        optBtn:SetText("")
-        optBtn.DoClick = option.func
-        optBtn.Paint = function(me, w, h)
-            draw.RoundedBox(mi_hud.rounding, 0, 0, w, h, mi_hud.theme.base)
-            if me:IsHovered() then
-                draw.RoundedBox(mi_hud.rounding, 0, 0, w, h, Color(mi_hud.theme.baseOutline.r, mi_hud.theme.baseOutline.g, mi_hud.theme.baseOutline.b, 50))
-            end
-            draw.SimpleText(option.name, "ScoreboardButtons", w * .01, h / 2, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        local outlineColor = mi_hud.scoreboard.theme.outline
+
+        draw.RoundedBox(mi_hud.rounding, 0, 0, 1, h, outlineColor) -- Left
+        draw.RoundedBox(mi_hud.rounding, 0, 0, w, 1, outlineColor) -- Top
+        draw.RoundedBox(mi_hud.rounding, w - 1, 0, 1, h, outlineColor) -- Right
+        draw.RoundedBox(mi_hud.rounding, 0, h - 1, w, 1, outlineColor) -- Bottom
+
+        if me:IsHovered() then
+            button.CurAlpha = Lerp(FrameTime() * animationSmooth, button.CurAlpha, button.HoveredAlpha)
+        else
+            button.CurAlpha = Lerp(FrameTime() * animationSmooth, button.CurAlpha, button.DefaultAlpha)
         end
+
+        surface.SetDrawColor(color)
+        surface.SetMaterial(gradient)
+        surface.DrawTexturedRect(0, 0, w, h)
+
+        draw.SimpleText(PlayerName, "mi.sb.text", w * .01, h / 2 + 1, mi_hud.scoreboard.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+
+        draw.SimpleText(PlayerJob, "mi.sb.text", w / 2, h / 2 + 1, mi_hud.scoreboard.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+        draw.SimpleText(PlayerPing, "mi.sb.text", w - w * .01, h / 2 + 1, mi_hud.scoreboard.theme.text, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+
+
+    end
+    button.DoClick = function ( me )
+        if panel.Closed then
+            panel:SizeTo(panel:GetWide(), parent:GetTall() * .15, 1, 0, .1)
+        else
+            panel:SizeTo(panel:GetWide(), panel.ClosedHeight, 1, 0, .1)
+        end
+        panel.Closed = not panel.Closed
     end
 end
 
-local function Scoreboard()
-    gui.EnableScreenClicker(true)
-
-    local scrw, scrh = ScrW(), ScrH()
-
-    window = vgui.Create("DPanel")
-    window:SetSize(scrw * .6, scrh * .8)
-    window:Center()
-    window.Paint = function(me, w, h)
-        draw.RoundedBox(mi_hud.rounding, 0, 0, w, h, mi_hud.theme.baseOutline)
-        draw.RoundedBox(mi_hud.rounding, 1, 1, w - 2, h - 2, mi_hud.theme.base)
-    end
-
-    local header = vgui.Create("DPanel", window)
-    header:Dock(TOP)
-    header:SetTall(window:GetTall() * .04)
-    header.Paint = function(me, w, h)
-        draw.RoundedBox(mi_hud.rounding, 0, 0, w, h, mi_hud.theme.baseOutline)
-        draw.SimpleText("Millenium RP | Игроки", "ScoreboardHeader", w / 2, h / 2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    end
-
-    local footer = vgui.Create("DPanel", window)
-    footer:Dock(BOTTOM)
-    footer:SetTall(window:GetTall() * .05)
-    footer.Paint = function(me, w, h)
-        draw.RoundedBox(mi_hud.rounding, 0, 0, w, h, Color(20, 20, 20, 200))
-        draw.SimpleText("Онлайн: " .. #player.GetAll() .. " игроков", "ScoreboardButtons", 10, h / 2, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-    end
-
-    local playersScroll = vgui.Create("DScrollPanel", window)
-    playersScroll:Dock(FILL)
-    playersScroll:DockMargin(10, 10, 10, 10)
+local function createWindow(width, height)
 
     local sortedPlayers = player.GetAll()
     table.sort(sortedPlayers, function(a, b)
-        return team.GetName(a:Team()):lower() < team.GetName(b:Team()):lower()
+        local aName = a:getDarkRPVar("rpname"):lower()
+        local bName = b:getDarkRPVar("rpname"):lower()
+        local aJob =  team.GetName(a:Team()):lower()
+        local bJob =  team.GetName(b:Team()):lower()
+
+        if aJob == bJob then
+            return aName < bName
+        else
+            return aJob < bJob
+        end
     end)
 
-    for _, ply in ipairs(sortedPlayers) do
-        CreatePlayerRow(playersScroll, ply)
+    local panel = vgui.Create("DPanel")
+    panel:SetSize(0, 0)
+    panel.opening = true
+    panel:SizeTo(width, height, .5, 0, .1, function ()
+        panel.opening = false
+    end)
+    panel.Paint = function (me, w, h)
+        draw.RoundedBox(mi_hud.rounding, 0, 0, w, h, mi_hud.scoreboard.theme.baseOutline)
+        draw.RoundedBox(mi_hud.rounding, 1, 1, w - 2, h - 2, mi_hud.scoreboard.theme.base)
     end
+
+    local header = vgui.Create("DPanel", panel)
+    header.Paint = function (me, w, h)
+        draw.RoundedBox(mi_hud.rounding, 0, 0, w, h, mi_hud.scoreboard.theme.header)
+        draw.SimpleText("Millenium RP | Игроки", "mi.sb.header", w / 2, h / 2, mi_hud.scoreboard.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+
+    local footer = vgui.Create("DPanel", panel)
+    footer.Paint = function (me, w, h)
+        draw.RoundedBox(mi_hud.rounding, 0, 0, w, h, mi_hud.scoreboard.theme.header)
+    end
+
+    local scroll = vgui.Create("DScrollPanel", panel)
+    scroll:DockMargin(0, 5, 0, 5)
+    local sbar = scroll:GetVBar()
+    sbar.HoveredAlpha = 5
+    sbar.DefaultAlpha = 0
+    sbar.CurAlpha = sbar.DefaultAlpha
+    sbar:SetWide(scroll:GetWide() * .2)
+    function sbar:Paint(w, h)
+        local width = w * .5
+        draw.RoundedBox(100, w / 2 - width, 0, width, h, Color(0,0,0,100))
+    end
+    function sbar.btnUp:Paint(w, h)
+    end
+    function sbar.btnDown:Paint(w, h)
+    end
+    function sbar.btnGrip:Paint(w, h)
+        local alpha
+        local width = w * .5
+        draw.RoundedBox(100, w / 2 - width, 0, width, h, mi_hud.scoreboard.theme.panel)
+        if sbar.btnGrip:IsHovered() then
+            sbar.CurAlpha = Lerp(FrameTime() * 10, sbar.CurAlpha, sbar.HoveredAlpha)
+        else
+            sbar.CurAlpha = Lerp(FrameTime() * 10, sbar.CurAlpha, sbar.DefaultAlpha)
+        end
+
+        draw.RoundedBox(100, w / 2 - width, 0, width, h, Color(255,255,255,sbar.CurAlpha))
+
+    end
+
+    for _, ply in ipairs(sortedPlayers) do
+        createPlayerPanel(ply, scroll, 30)
+    end
+
+    panel.Think = function ()
+        if panel.opening then
+            panel:Center()
+            header:Dock(TOP)
+            header:SetTall(panel:GetTall() * .04)
+            footer:Dock(BOTTOM)
+            footer:SetTall(panel:GetTall() * .04)
+            scroll:Dock(FILL)
+        end
+    end
+
+    return panel
+end
+
+local function Scoreboard()
+
+    gui.EnableScreenClicker( true )
+    local scrw, scrh = ScrW(), ScrH()
+
+    scoreboard = createWindow(scrw * .6, scrh * .8)
+
 end
 
 hook.Add("ScoreboardShow", "millenium.scoreboard.show", function()
@@ -149,8 +183,12 @@ hook.Add("ScoreboardShow", "millenium.scoreboard.show", function()
 end)
 
 hook.Add("ScoreboardHide", "millenium.scoreboard.hide", function()
-    if IsValid(window) then
-        gui.EnableScreenClicker(false)
-        window:Remove()
+    gui.EnableScreenClicker(false)
+    if IsValid(scoreboard) then
+        scoreboard:AlphaTo(0, .1, 0, function ()
+            if IsValid(scoreboard) then
+                scoreboard:Remove()
+            end
+        end)
     end
 end)
