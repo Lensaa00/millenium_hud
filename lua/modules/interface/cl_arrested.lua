@@ -9,7 +9,7 @@ function mi_hud.elements:Arrested()
         local timeLeft = math.max(0, math.floor(arrestTime - CurTime())) -- Счетчик времени
 
         -- Размеры текста
-        surface.SetFont("Mi6")
+        surface.SetFont("mi.hud.6")
         local tw, th = surface.GetTextSize("Вы арестованы! Осталось: " .. timeLeft .. " сек.")
 
         -- Размеры панели
@@ -34,6 +34,6 @@ function mi_hud.elements:Arrested()
         surface.DrawTexturedRect(panelX + 7, panelY + panelH / 2 - iconSize / 2, iconSize, iconSize)
 
         -- Текст
-        draw.SimpleText("Вы арестованы! Осталось: " .. timeLeft .. " сек.", "Mi6", panelX + 7 + iconSize + 7, panelY + panelH / 2, Color(255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        draw.SimpleText("Вы арестованы! Осталось: " .. timeLeft .. " сек.", "mi.hud.6", panelX + 7 + iconSize + 7, panelY + panelH / 2, Color(255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
 end

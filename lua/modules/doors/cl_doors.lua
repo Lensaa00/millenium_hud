@@ -1,6 +1,11 @@
 local ply = LocalPlayer()
 local Cache = {}
 
+surface.CreateFont("mi.doors.header", {font = "Montserrat Bold", size = ScreenScale(13), extended = true, antialias = true})
+surface.CreateFont("mi.doors.header.shadow", {font = "Montserrat Bold", size = ScreenScale(13), blursize = 2, extended = true, antialias = true})
+surface.CreateFont("mi.doors.subheader", {font = "Montserrat", size = ScreenScale(10), extended = true, antialias = true})
+surface.CreateFont("mi.doors.subheader.shadow", {font = "Montserrat", size = ScreenScale(10), blursize = 2, extended = true, antialias = true})
+
 local function Draw2D3DDoor(door)
     if not IsValid(door) then return end -- Ensure the door is valid
 
@@ -75,7 +80,11 @@ local function Draw2D3DDoor(door)
 
     if not doorData.nonOwnable then
         if doorData.owner then
-            doorHeader = doorData.title or "Дверь"
+            local title = doorData.title or "Дверь"
+            if #title > 35 then
+                title = string.sub(title, 1, 32) .. "..."
+            end
+            doorHeader = title
             local doorOwner = Player(doorData.owner)
             doorSubHeader = IsValid(doorOwner) and "Владелец: " .. doorOwner:Name() or "Владелец: Неизвестен"
         elseif doorData.teamOwn then
@@ -88,11 +97,12 @@ local function Draw2D3DDoor(door)
         end
     end
 
+
     local function drawDoor()
-        draw.SimpleText(doorHeader, "DoorHeaderShadow", DoorData.canvasWidth / 2, 1, Color(0,0,0), TEXT_ALIGN_CENTER)
-        draw.SimpleText(doorSubHeader, "DoorSubHeaderShadow", DoorData.canvasWidth / 2, 50 * 1 + 1, Color(0,0,0), TEXT_ALIGN_CENTER)
-        draw.SimpleText(doorHeader, "DoorHeader", DoorData.canvasWidth / 2, 0, color_white, TEXT_ALIGN_CENTER)
-        draw.SimpleText(doorSubHeader, "DoorSubHeader", DoorData.canvasWidth / 2, 50 * 1, color_white, TEXT_ALIGN_CENTER)
+        draw.SimpleText(doorHeader, "mi.doors.header.shadow", DoorData.canvasWidth / 2, 1, Color(0,0,0), TEXT_ALIGN_CENTER)
+        draw.SimpleText(doorSubHeader, "mi.doors.subheader.shadow", DoorData.canvasWidth / 2, 50 * 1 + 1, Color(0,0,0), TEXT_ALIGN_CENTER)
+        draw.SimpleText(doorHeader, "mi.doors.header", DoorData.canvasWidth / 2, 0, color_white, TEXT_ALIGN_CENTER)
+        draw.SimpleText(doorSubHeader, "mi.doors.subheader", DoorData.canvasWidth / 2, 50 * 1, color_white, TEXT_ALIGN_CENTER)
     end
 
     cam.Start3D()
@@ -107,7 +117,7 @@ local function Draw2D3DDoor(door)
 end
 
 hook.Add("RenderScreenspaceEffects", "millenium_hud.doors.draw", function( )
-    local entities = ents.FindInSphere(LocalPlayer():EyePos(), mi_hud.drawDistance)
+    local entities = ents.FindInSphere(LocalPlayer():EyePos(), mi_hud.drawDistance * 1.5)
 
     for _, curEnt in ipairs(entities) do
         if IsValid(curEnt) and curEnt:isDoor() and curEnt:GetClass() != "prop_dynamic" and not curEnt:GetNoDraw() then

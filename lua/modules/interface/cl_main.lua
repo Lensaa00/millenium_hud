@@ -1,3 +1,9 @@
+surface.CreateFont("mi.hud.logo", {font = "Montserrat Bold", extended = true, size = ScreenScale(10), antialias = true})
+surface.CreateFont("mi.hud.time", {font = "Montserrat Bold", extended = true, size = ScreenScale(6), antialias = true})
+surface.CreateFont("mi.hud.hunger", {font = "Montserrat", extended = true, size = ScreenScale(10), antialias = true})
+surface.CreateFont("mi.hud.text", {font = "Montserrat", extended = true, size = ScreenScale(8.5), antialias = true})
+surface.CreateFont("mi.hud.text.shadow", {font = "Montserrat", extended = true, blursize = 2, size = ScreenScale(8.5), antialias = true})
+
 local SmoothedHealth = 100
 local SmoothedArmor = 100
 
@@ -38,13 +44,13 @@ function mi_hud.elements:Main()
 
     -- Сменяемое лого
     if ShowingLogo then
-        draw.SimpleText("Mi", "Logo", pivotlx + ScreenScale(8.1), pivotly - scrh * .03, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText("Mi", "mi.hud.logo", pivotlx + ScreenScale(8.1), pivotly - scrh * .03, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         if (CurTime() - LastLogoChange >= LogoChangeDelay) then
             ShowingLogo = false
             LastLogoChange = CurTime()
         end
     else
-        draw.SimpleText(Time, "Time", pivotlx + ScreenScale(8.25), pivotly - scrh * .03, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(Time, "mi.hud.time", pivotlx + ScreenScale(8.25), pivotly - scrh * .03, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         if (CurTime() - LastLogoChange >= LogoChangeDelay) then
             ShowingLogo = true
             LastLogoChange = CurTime()
@@ -71,7 +77,7 @@ function mi_hud.elements:Main()
     surface.SetMaterial(mi_hud.icons.interface["hunger"])
     surface.DrawTexturedRect(pivotlx + scrw * 0.193, pivotly - scrh * 0.038 - ScreenScale(.5), ScreenScale(6.5), ScreenScale(6.5))
         -- Текст
-    draw.SimpleText(PHunger .. "%", "Hunger", pivotlx + scrw * 0.22, pivotly - scrh * 0.029 - ScreenScale(.5), Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    draw.SimpleText(PHunger .. "%", "mi.hud.hunger", pivotlx + scrw * 0.22, pivotly - scrh * 0.029 - ScreenScale(.5), Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
     -- Деньги
         -- Панель
@@ -82,8 +88,8 @@ function mi_hud.elements:Main()
     surface.SetMaterial(mi_hud.icons.interface["money"])
     surface.DrawTexturedRect(pivotlx + ScreenScale(2), pivotly - scrh * .080 + ScreenScale(2), ScreenScale(6), ScreenScale(6))
         -- Текст
-    draw.SimpleText(PMoney .. " +" .. PSalary, "TextShadow", pivotlx + scrw * .02, pivotly - scrh * .067 + 2, Color(0,0,0, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-    draw.SimpleText(PMoney .. " +" .. PSalary, "Text", pivotlx + scrw * .02, pivotly - scrh * .067, Color(255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    draw.SimpleText(PMoney .. " +" .. PSalary, "mi.hud.text.shadow", pivotlx + scrw * .02, pivotly - scrh * .067 + 2, Color(0,0,0, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    draw.SimpleText(PMoney .. " +" .. PSalary, "mi.hud.text", pivotlx + scrw * .02, pivotly - scrh * .067, Color(255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
     -- Работа
         -- Панель
@@ -94,8 +100,8 @@ function mi_hud.elements:Main()
     surface.SetMaterial(mi_hud.icons.interface["job"])
     surface.DrawTexturedRect(pivotlx + ScreenScale(2), pivotly - scrh * .112 + ScreenScale(2), ScreenScale(6), ScreenScale(6))
         -- Текст
-    draw.SimpleText(PJob, "TextShadow", pivotlx + scrw * .02, pivotly - scrh * .098 + 2, Color(0,0,0, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-    draw.SimpleText(PJob, "Text", pivotlx + scrw * .02, pivotly - scrh * .098, Color(255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    draw.SimpleText(PJob, "mi.hud.text.shadow", pivotlx + scrw * .02, pivotly - scrh * .098 + 2, Color(0,0,0, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    draw.SimpleText(PJob, "mi.hud.text", pivotlx + scrw * .02, pivotly - scrh * .098, Color(255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
     -- Лицензия
     if PHasLicense then
@@ -107,7 +113,7 @@ function mi_hud.elements:Main()
         surface.SetMaterial(mi_hud.icons.interface["license"])
         surface.DrawTexturedRect(pivotlx + ScreenScale(2), pivotly - scrh * .141 + ScreenScale(2), ScreenScale(6), ScreenScale(6))
         -- Текст
-        draw.SimpleText("Есть лицензия", "TextShadow", pivotlx + scrw * .02, pivotly - scrh * .128 + 2, Color(0,0,0, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-        draw.SimpleText("Есть лицензия", "Text", pivotlx + scrw * .02, pivotly - scrh * .128, Color(255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        draw.SimpleText("Есть лицензия", "mi.hud.text.shadow", pivotlx + scrw * .02, pivotly - scrh * .128 + 2, Color(0,0,0, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        draw.SimpleText("Есть лицензия", "mi.hud.text", pivotlx + scrw * .02, pivotly - scrh * .128, Color(255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
 end

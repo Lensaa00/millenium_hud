@@ -1,18 +1,10 @@
-local function SetupFonts()
-    surface.CreateFont("Logo", {font = "Montserrat Bold", extended = true, size = ScreenScale(10), antialias = true})
-    surface.CreateFont("Time", {font = "Montserrat Bold", extended = true, size = ScreenScale(6), antialias = true})
-    surface.CreateFont("Hunger", {font = "Montserrat", extended = true, size = ScreenScale(10), antialias = true})
-    surface.CreateFont("Text", {font = "Montserrat", extended = true, size = ScreenScale(8.5), antialias = true})
-    surface.CreateFont("TextShadow", {font = "Montserrat", extended = true, blursize = 2, size = ScreenScale(8.5), antialias = true})
-    surface.CreateFont("WatermarkTop", {font = "Montserrat Black", extended = true, size = ScreenScale(7), antialias = true})
-    surface.CreateFont("WatermarkBottom", {font = "Montserrat", extended = true, size = ScreenScale(6), antialias = true})
-    surface.CreateFont("Mi6", {font = "Montserrat", extended = true, size = ScreenScale(6.5), antialias = true})
-    surface.CreateFont("Mi6Shadow", {font = "Montserrat", extended = true, blursize = 2, size = ScreenScale(6.5), antialias = true})
-    surface.CreateFont("HealthArmor", {font = "Montserrat Black", extended = true, size = ScreenScale(5), antialias = true})
-    surface.CreateFont("HealthArmorShadow", {font = "Montserrat Black", extended = true, blursize = 2, size = ScreenScale(5), antialias = true})
-end
-
-SetupFonts() -- подгружаем шрифты
+surface.CreateFont("mi.hud.6", {font = "Montserrat", extended = true, size = ScreenScale(6.5), antialias = true})
+surface.CreateFont("mi.hud.6.shadow", {font = "Montserrat", extended = true, blursize = 2, size = ScreenScale(6.5), antialias = true})
+surface.CreateFont("mi.hud.10", {font = "Montserrat", extended = true, size = ScreenScale(6.5), antialias = true})
+surface.CreateFont("mi.hud.45", {font = "Montserrat Bold", extended = true, size = 45, antialias = true})
+surface.CreateFont("mi.hud.72", {font = "Montserrat Bold", extended = true, size = 72, antialias = true})
+surface.CreateFont("mi.hud.watermark.top", {font = "Montserrat Black", extended = true, size = ScreenScale(7), antialias = true})
+surface.CreateFont("mi.hud.watermark.bottom", {font = "Montserrat", extended = true, size = ScreenScale(6), antialias = true})
 
 function Interface()
     if not LocalPlayer():Alive() then return end -- Если игрок мертв, не отображаем
@@ -29,8 +21,8 @@ function Interface()
     local PCount = player.GetCount() -- Количество игроков на сервере
 
     -- Водяные знаки
-    draw.SimpleText(PCount .. " MILLENIUM RP", "WatermarkTop", scrw * .995, scrh * 0.001, Color(255,255,255, 65), TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
-    draw.SimpleText(PName .. " | " .. PSteamID, "WatermarkBottom", scrw * .995, scrh * .02, Color(255,255,255, 65), TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+    draw.SimpleText(PCount .. " MILLENIUM RP", "mi.hud.watermark.top", scrw * .995, scrh * 0.001, Color(255,255,255, 65), TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+    draw.SimpleText(PName .. " | " .. PSteamID, "mi.hud.watermark.bottom", scrw * .995, scrh * .02, Color(255,255,255, 65), TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
 
     mi_hud.elements:Main() -- отображение главного модуля
     mi_hud.elements:Arrested() -- отображение модуля Ареста
