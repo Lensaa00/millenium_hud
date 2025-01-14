@@ -154,6 +154,8 @@ end)
 
 hook.Add("PlayerBindPress", "millenium.ws.binds", function(ply, bind, pressed)
     if ply ~= LocalPlayer() then return end
+    if #activeSlots <= 0 then return end
+
     bind = bind:lower()
 
     for i = 1, 6 do
