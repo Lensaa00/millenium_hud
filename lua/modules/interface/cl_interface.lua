@@ -1,5 +1,8 @@
 surface.CreateFont("mi.hud.6", {font = "Montserrat", extended = true, size = ScreenScale(6.5), antialias = true})
 surface.CreateFont("mi.hud.6.shadow", {font = "Montserrat", extended = true, blursize = 2, size = ScreenScale(6.5), antialias = true})
+surface.CreateFont("mi.hud.screen10", {font = "Montserrat", extended = true, size = ScreenScale(10), antialias = true})
+surface.CreateFont("mi.hud.screen10.shadow", {font = "Montserrat", extended = true, blursize = 2, size = ScreenScale(10), antialias = true})
+surface.CreateFont("mi.hud.20", {font = "Montserrat", extended = true, size = 20, antialias = true})
 surface.CreateFont("mi.hud.25", {font = "Montserrat", extended = true, size = 25, antialias = true})
 surface.CreateFont("mi.hud.45", {font = "Montserrat Bold", extended = true, size = 45, antialias = true})
 surface.CreateFont("mi.hud.72", {font = "Montserrat Bold", extended = true, size = 72, antialias = true})

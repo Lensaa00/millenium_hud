@@ -110,7 +110,7 @@ hook.Add("DrawOverlay", "millenium.ws.draw", function()
         draw.RoundedBox(0, startX + 1, startY + 1, slotSize - 2, slotSize - 2, Color(mi_hud.theme.base.r, mi_hud.theme.base.g, mi_hud.theme.base.b, alpha))
 
         if index == selectorSlot then
-            draw.RoundedBox(0, startX + 1, startY + 1, slotSize - 2, slotSize - 2, Color(mi_hud.theme.baseOutline.r, mi_hud.theme.baseOutline.g, mi_hud.theme.baseOutline.b, alpha))
+            draw.RoundedBox(0, startX, startY, slotSize, slotSize, Color(mi_hud.theme.accent.r, mi_hud.theme.accent.g, mi_hud.theme.accent.b, alpha))
         end
 
         draw.SimpleText(index, "mi.ws.slot", startX + slotSize / 2, startY + slotSize / 2, Color(255, 255, 255, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
@@ -126,9 +126,12 @@ hook.Add("DrawOverlay", "millenium.ws.draw", function()
 
         for _, weapon in ipairs(activeSlots[selectorSlot].Weapons) do
             surface.SetFont("mi.ws.weapon")
-            local name = weapon:GetPrintName()
-            local tw = surface.GetTextSize(name)
-            panelW = math.max(panelW, tw + 20)
+            if weapon then
+                local name = weapon:GetPrintName()
+                local tw = surface.GetTextSize(name)
+                panelW = math.max(panelW, tw + 20)
+            end
+
         end
 
         local panelX = activeSlots[selectorSlot].PosX - panelW - panelGap
@@ -139,10 +142,10 @@ hook.Add("DrawOverlay", "millenium.ws.draw", function()
             draw.RoundedBox(0, panelX + 1, panelY + 1, panelW - 2, panelH - 2, mi_hud.theme.base)
 
             if selectorWeaponIndex == weaponIndex then
-                draw.RoundedBox(0, panelX, panelY, panelW, panelH, mi_hud.theme.baseOutline)
+                draw.RoundedBox(0, panelX, panelY, panelW, panelH, mi_hud.theme.accent)
             end
 
-            draw.SimpleText(weapon:GetPrintName(), "mi.ws.weapon", panelX + panelW - 10, panelY + panelH / 2, Color(255, 255, 255, alphaValue), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+            draw.SimpleText(weapon:GetPrintName(), "mi.ws.weapon", panelX + 10, panelY + panelH / 2, Color(255, 255, 255, alphaValue), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
             panelY = panelY + panelH + panelGap
         end
@@ -152,8 +155,6 @@ end)
 hook.Add("PlayerBindPress", "millenium.ws.binds", function(ply, bind, pressed)
     if ply ~= LocalPlayer() then return end
     bind = bind:lower()
-
-    print(bind)
 
     for i = 1, 6 do
         if string.find(bind, "slot" .. tostring(i)) and pressed then

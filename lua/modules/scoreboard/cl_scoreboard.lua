@@ -2,6 +2,10 @@ surface.CreateFont("mi.sb.header", { font = "Montserrat", extended = true, size 
 surface.CreateFont("mi.sb.text", { font = "Montserrat", extended = true, size = ScreenScale(6), antialias = true})
 surface.CreateFont("mi.sb.text.shadow", { font = "Montserrat", extended = true, size = ScreenScale(6), antialias = true})
 
+local function CopyColor( color )
+    return Color(color.r, color.g, color.b, color.a)
+end
+
 local function createPlayerPanel( ply, parent, height )
     if not ply or not IsValid(ply) then return end
     if not parent then return end
@@ -40,16 +44,16 @@ local function createPlayerPanel( ply, parent, height )
     button:SetTall(panel.ClosedHeight)
     button:SetText("")
     button:DockMargin(panel.ClosedHeight, 0, 0, 0)
-    button.DefaultAlpha = 30
-    button.HoveredAlpha = 100
+    button.DefaultAlpha = 70
+    button.HoveredAlpha = 150
     button.CurAlpha = button.DefaultAlpha
     button.SoundPlayed = false
     button.Paint = function (me, w, h)
         local gradient = Material("gui/gradient_up")
-        local color = PlayerTeamColor
+        local outlineColor = CopyColor(PlayerTeamColor)
+        outlineColor.a = 70
+        local color = CopyColor(PlayerTeamColor)
         color.a = button.CurAlpha
-
-        local outlineColor = mi_hud.scoreboard.theme.outline
 
         draw.RoundedBox(mi_hud.rounding, 0, 0, 1, h, outlineColor) -- Left
         draw.RoundedBox(mi_hud.rounding, 0, 0, w, 1, outlineColor) -- Top

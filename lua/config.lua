@@ -87,6 +87,7 @@ mi_hud.notifTypes = {
 -- Тема худа
 mi_hud.theme = {
     base = Color(46, 53, 80, 255), -- Основной цвет
+    accent = Color(71, 94, 187),
     baseOutline = Color(70, 80, 122, 255), -- Обводка
     header = Color(51, 69, 96, 255), -- Заголовок
 }
