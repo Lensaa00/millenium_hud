@@ -106,3 +106,5 @@ hook.Add("PostDrawTranslucentRenderables", "millenium.overhead.draw", function()
         cam.End3D2D()
     end
 end)
+
+mi_hud:Log("[Overhead] Загружен")

@@ -53,9 +53,13 @@ local function RemoveOldNotifications()
     end
 end
 
-function Notification(text, type, length)
+function Notification(text, type, length, playSound)
     local panel = CreateNotificationPanel(text, type, length)
     table.insert(notifications, panel)
+
+    if playSound then
+        surface.PlaySound("ambient/water/drip2.wav")
+    end
 
     RemoveOldNotifications()
     UpdateNotificationPositions()
@@ -75,9 +79,11 @@ function Notification(text, type, length)
 end
 
 usermessage.Hook("_Notify", function(msg)
-    Notification(msg:ReadString(), "NOTIFY_DARKRP", 7)
+    Notification(msg:ReadString(), "NOTIFY_DARKRP", 7, true)
 end)
 
 function notification.AddLegacy(text, type, length)
     Notification(text, type, length)
 end
+
+mi_hud:Log("[Notifications] Загружен")

@@ -1,6 +1,10 @@
 mi_hud = {}
 mi_hud.elements = {}
 
+function mi_hud:Log( text )
+    print("[Millenmium][HUD]" .. text)
+end
+
 if SERVER then
     include("config.lua")
     AddCSLuaFile("config.lua")

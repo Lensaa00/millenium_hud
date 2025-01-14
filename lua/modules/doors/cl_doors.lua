@@ -125,3 +125,5 @@ hook.Add("RenderScreenspaceEffects", "millenium_hud.doors.draw", function( )
         end
     end
 end)
+
+mi_hud:Log("[Doors] Загружен")

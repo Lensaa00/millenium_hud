@@ -1,199 +1,247 @@
-print("NO SELECTOR")
+surface.CreateFont("mi.ws.slot", {font = "Montserrat Bold", size = ScreenScale(10), extended = true})
+surface.CreateFont("mi.ws.weapon", {font = "Montserrat", size = ScreenScale(8), extended = true})
 
--- local selectedSlot = 0 -- Выбранный слот
--- local selectedWeaponIndex = 1 -- Индекс выбранного оружия в текущем слоте
--- local slotAnimations = {} -- Для анимации оружия
--- local selectorVisible = false -- Видимость селектора
--- local selectorAlpha = 0 -- Прозрачность селектора (0 = невидим)
--- local selectorLastUsed = 0 -- Последнее время использования селектора
--- local holdAttack = false -- Удерживается ли кнопка атаки
--- local firstScroll = true -- Для обработки первого скролла
+local Slots = {}
+local activeSlots = {}
 
--- surface.CreateFont("mi.ws.text", {font = "Montserrat", extended = true, size = ScreenScale(6), antialias = true})
+local selectorSlot = 1
+local selectorWeaponIndex = 1
+local selectorVisible = false
+local selectorFirstChange = true
+local lastInvChange = CurTime()
+local hideTime = 2
+local attackHeld = false
 
--- -- Скрываем стандартный Weapon Selector
--- hook.Add("HUDShouldDraw", "millenium.weaponselector.hide", function(name)
---     if name == "CHudWeaponSelection" then return false end
--- end)
+-- Анимация для альфа-канала (прозрачности)
+local alphaValue = 0
+local alphaIncrement = 1500
 
--- -- Заполняем слоты оружиями
--- local function PopulateSlots(ply)
---     local slots = {}
+local function populateSlots()
+    local slots = {}
 
---     if not IsValid(ply) then return slots end
+    local Player = LocalPlayer()
+    local Weapons = Player:GetWeapons()
 
---     local Weapons = ply:GetWeapons()
---     for _, weapon in ipairs(Weapons) do
---         local slot = weapon:GetSlot()
---         if not slots[slot] then
---             slots[slot] = {}
---         end
---         table.insert(slots[slot], weapon)
---     end
+    -- Инициализация слотов от 0 до 6
+    for i = 0, 6 do
+        slots[i] = {
+            Weapons = {},
+            PosX = 0,
+            PosY = 0
+        }
+    end
 
---     return slots
--- end
+    -- Распределение оружия по слотам
+    for _, weapon in ipairs(Weapons) do
+        local slot = weapon:GetSlot()
 
--- -- Линейная интерполяция
--- local function Lerp(alpha, from, to)
---     return from + (to - from) * alpha
--- end
+        -- Проверяем, существует ли слот
+        if not slots[slot] then
+            slots[slot] = { Weapons = {}, PosX = 0, PosY = 0 }
+        end
 
--- -- Анимация оружий
--- local function AnimateWeapons(slot, targetX, targetY)
---     if not slotAnimations[slot] then
---         slotAnimations[slot] = {x = targetX, y = targetY, progress = 0}
---     end
+        table.insert(slots[slot].Weapons, weapon)
+    end
 
---     local anim = slotAnimations[slot]
---     anim.progress = math.min(1, anim.progress + FrameTime() * 5) -- Скорость анимации
+    return slots
+end
 
---     anim.x = Lerp(anim.progress, anim.x, targetX)
---     anim.y = Lerp(anim.progress, anim.y, targetY)
+local function updateActiveSlots()
+    activeSlots = {}
 
---     return anim.x, anim.y
--- end
+    for slotIndex, slot in pairs(Slots) do
+        if #slot.Weapons > 0 then
+            table.insert(activeSlots, slot)
+        end
+    end
+end
 
--- -- Проигрывание звуков
--- local function PlaySound(name)
---     surface.PlaySound(name)
--- end
+local function updateSelectedWeapon()
+    local ply = LocalPlayer()
+    local activeWeapon = ply:GetActiveWeapon()
 
--- -- Основная функция отрисовки селектора оружий
--- local function WeaponSelector()
---     if not selectorVisible and selectorAlpha <= 0 then return end
+    for slotIndex, slot in ipairs(activeSlots) do
+        for weaponIndex, weapon in ipairs(slot.Weapons) do
+            if weapon == activeWeapon then
+                selectorSlot = slotIndex
+                selectorWeaponIndex = weaponIndex
+                return
+            end
+        end
+    end
 
---     local Player = LocalPlayer()
---     if not IsValid(Player) then return end
+    -- Если активное оружие не найдено, сбрасываем выбор
+    selectorSlot = 1
+    selectorWeaponIndex = 1
+end
 
---     local scrw, scrh = ScrW(), ScrH()
---     local Slots = PopulateSlots(Player)
+-- Отображение пользовательского интерфейса
+hook.Add("DrawOverlay", "millenium.ws.draw", function()
+    if not selectorVisible then return end
 
---     -- Параметры для отображения слотов
---     local slotSize = 30
---     local slotX = scrw - slotSize - 5
---     local slotY = scrh / 2 - (#Slots * (slotSize)) / 2 -- Центрируем слоты
+    -- Обновление альфа-канала для анимации появления
+    if alphaValue < 255 then
+        alphaValue = math.min(255, alphaValue + (FrameTime() * alphaIncrement))
+    end
 
---     -- Анимация появления/исчезновения селектора
---     selectorAlpha = Lerp(FrameTime() * 5, selectorAlpha, selectorVisible and 255 or 0)
---     if selectorAlpha <= 0 then return end
+    if CurTime() - lastInvChange >= hideTime then
+        selectorVisible = false
+        selectorFirstChange = true
+        alphaValue = 0
+        return
+    end
 
---     -- Отображение слотов
---     for slotIndex = 0, 5 do
---         local slotWeapons = Slots[slotIndex] or {}
+    local scrw, scrh = ScrW(), ScrH()
 
---         if #slotWeapons == 0 then
---             if selectedSlot == slotIndex then
---                 selectedSlot = (selectedSlot + 1) % 6
---             end
---             continue
---         end
+    -- Формируем список активных слотов
+    local slotSize = 30
+    local slotsGap = 5
+    local startX = scrw - slotSize - 10
+    local startY = scrh / 2 - (#activeSlots / 2 * (slotSize + slotsGap))
 
---         local slotColor = Color(0, 0, 0, selectorAlpha * 0.5)
---         if selectedSlot == slotIndex then
---             slotColor = Color(100, 100, 255, selectorAlpha * 0.6)
---         end
+    -- Отображение слотов
+    for index, slot in ipairs(activeSlots) do
+        slot.PosX = startX
+        slot.PosY = startY
 
---         draw.RoundedBox(8, slotX, slotY, slotSize, slotSize, slotColor)
---         draw.SimpleText(slotIndex + 1, "mi.ws.text", slotX + slotSize / 2, slotY + slotSize / 2, Color(255, 255, 255, selectorAlpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        local alpha = (index == selectorSlot) and alphaValue or math.max(100, alphaValue / 10)
 
---         -- Отображение оружий в выбранном слоте
---         if selectedSlot == slotIndex then
---             local weaponPanelWidth = 200
---             local weaponPanelHeight = 30
---             local weaponPanelX = slotX - weaponPanelWidth - 5
---             local weaponPanelY = slotY
+        draw.RoundedBox(0, startX, startY, slotSize, slotSize, Color(mi_hud.theme.baseOutline.r, mi_hud.theme.baseOutline.g, mi_hud.theme.baseOutline.b, alpha))
+        draw.RoundedBox(0, startX + 1, startY + 1, slotSize - 2, slotSize - 2, Color(mi_hud.theme.base.r, mi_hud.theme.base.g, mi_hud.theme.base.b, alpha))
 
---             for index, weapon in ipairs(slotWeapons) do
---                 local weaponColor = Color(50, 50, 50, selectorAlpha * 0.6)
---                 if index == selectedWeaponIndex then
---                     weaponColor = Color(100, 100, 255, selectorAlpha * 0.8)
---                 end
+        if index == selectorSlot then
+            draw.RoundedBox(0, startX + 1, startY + 1, slotSize - 2, slotSize - 2, Color(mi_hud.theme.baseOutline.r, mi_hud.theme.baseOutline.g, mi_hud.theme.baseOutline.b, alpha))
+        end
 
---                 -- Анимация оружия
---                 local animX, animY = AnimateWeapons(index, weaponPanelX, weaponPanelY)
+        draw.SimpleText(index, "mi.ws.slot", startX + slotSize / 2, startY + slotSize / 2, Color(255, 255, 255, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
---                 draw.RoundedBox(8, animX, animY, weaponPanelWidth, weaponPanelHeight, weaponColor)
---                 draw.SimpleText(weapon:GetPrintName(), "mi.ws.text", animX + 10, animY + weaponPanelHeight / 2, Color(255, 255, 255, selectorAlpha), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        startY = startY + slotSize + slotsGap
+    end
 
---                 weaponPanelY = weaponPanelY + weaponPanelHeight + 5
---             end
---         end
+    -- Отображение оружия в текущем слоте
+    if activeSlots[selectorSlot] then
+        local panelW = 0
+        local panelH = slotSize
+        local panelGap = 5
 
---         slotY = slotY + slotSize + 5
---     end
--- end
+        for _, weapon in ipairs(activeSlots[selectorSlot].Weapons) do
+            surface.SetFont("mi.ws.weapon")
+            local name = weapon:GetPrintName()
+            local tw = surface.GetTextSize(name)
+            panelW = math.max(panelW, tw + 20)
+        end
 
--- -- Обработка нажатий клавиш
--- hook.Add("PlayerBindPress", "millenium.weaponselector.press", function(ply, bind, pressed)
---     if ply ~= LocalPlayer() or not pressed then return end
---     bind = bind:lower()
+        local panelX = activeSlots[selectorSlot].PosX - panelW - panelGap
+        local panelY = activeSlots[selectorSlot].PosY
 
---     local Slots = PopulateSlots(ply)
---     local weaponsInSlot = Slots[selectedSlot] or {}
+        for weaponIndex, weapon in ipairs(activeSlots[selectorSlot].Weapons) do
+            draw.RoundedBox(0, panelX, panelY, panelW, panelH, mi_hud.theme.baseOutline)
+            draw.RoundedBox(0, panelX + 1, panelY + 1, panelW - 2, panelH - 2, mi_hud.theme.base)
 
---     -- Нажатие на 1–6 для смены оружия внутри слота
---     for i = 1, 6 do
---         if bind == "slot" .. i then
---             if selectedSlot == i - 1 then
---                 selectedWeaponIndex = selectedWeaponIndex % #weaponsInSlot + 1
---             else
---                 selectedSlot = i - 1
---                 selectedWeaponIndex = 1
---             end
---             selectorVisible = true
---             selectorLastUsed = CurTime()
---             PlaySound("common/wpn_moveselect.wav")
---             return true
---         end
---     end
+            if selectorWeaponIndex == weaponIndex then
+                draw.RoundedBox(0, panelX, panelY, panelW, panelH, mi_hud.theme.baseOutline)
+            end
 
---     -- Прокрутка колесика мыши
---     if (bind == "invnext" or bind == "invprev") and not holdAttack then
---         if firstScroll then
---             selectorVisible = true
---             selectorLastUsed = CurTime()
---             firstScroll = false
---             return true
---         end
+            draw.SimpleText(weapon:GetPrintName(), "mi.ws.weapon", panelX + panelW - 10, panelY + panelH / 2, Color(255, 255, 255, alphaValue), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
 
---         selectedWeaponIndex = selectedWeaponIndex + (bind == "invnext" and 1 or -1)
---         if selectedWeaponIndex > #weaponsInSlot then
---             selectedWeaponIndex = 1
---         elseif selectedWeaponIndex < 1 then
---             selectedWeaponIndex = #weaponsInSlot
---         end
+            panelY = panelY + panelH + panelGap
+        end
+    end
+end)
 
---         selectorVisible = true
---         selectorLastUsed = CurTime()
---         PlaySound("common/wpn_moveselect.wav")
---     end
+hook.Add("PlayerBindPress", "millenium.ws.binds", function(ply, bind, pressed)
+    if ply ~= LocalPlayer() then return end
+    bind = bind:lower()
 
---     -- Выбор оружия
---     if bind == "+attack" then
---         holdAttack = true
---         local selectedWeapon = weaponsInSlot[selectedWeaponIndex]
---         if selectedWeapon then
---             RunConsoleCommand("use", selectedWeapon:GetClass())
---             PlaySound("common/wpn_select.wav")
---         end
---         selectorVisible = false
---     end
--- end)
+    print(bind)
 
--- -- Удержание кнопки атаки
--- hook.Add("Think", "millenium.weaponselector.holdattack", function()
---     if not input.IsMouseDown(MOUSE_LEFT) then
---         holdAttack = false
---     end
+    for i = 1, 6 do
+        if string.find(bind, "slot" .. tostring(i)) and pressed then
+            if not activeSlots[i] then return end
+            surface.PlaySound("millenium_hud/click2.wav")
+            lastInvChange = CurTime()
+            if selectorFirstChange then
+                selectorVisible = true
+                selectorFirstChange = false
+                updateSelectedWeapon()
+                selectorSlot = i
+                selectorWeaponIndex = 1
+                return
+            else
+                if selectorSlot ~= i then
+                    selectorSlot = i
+                    selectorWeaponIndex = 1
+                else
+                    selectorWeaponIndex = selectorWeaponIndex + 1
+                    if selectorWeaponIndex > #activeSlots[selectorSlot].Weapons then
+                        selectorWeaponIndex = 1
+                    end
+                end
+            end
 
---     if selectorVisible and CurTime() - selectorLastUsed > 2 then
---         selectorVisible = false
---         firstScroll = true
---     end
--- end)
+            return true
+        end
+    end
 
--- -- Отрисовка интерфейса
--- hook.Add("HUDPaint", "millenium.weaponselector.draw", function()
---     WeaponSelector()
--- end)
+    -- Обработка прокрутки колесика "invnext"
+    if string.find(bind, "invnext") then
+        lastInvChange = CurTime()
+
+        if attackHeld then return end -- Если атака зажата, не открываем селектор
+
+        if selectorFirstChange then
+            selectorVisible = true
+            selectorFirstChange = false
+            updateSelectedWeapon()
+        else
+            selectorWeaponIndex = selectorWeaponIndex + 1
+            if selectorWeaponIndex > #activeSlots[selectorSlot].Weapons then
+                selectorSlot = selectorSlot + 1
+                if selectorSlot > #activeSlots then selectorSlot = 1 end
+                selectorWeaponIndex = 1
+            end
+        end
+        surface.PlaySound("millenium_hud/click2.wav")
+    elseif string.find(bind, "invprev") then
+        lastInvChange = CurTime()
+
+        if attackHeld then return end -- Если атака зажата, не открываем селектор
+
+        if selectorFirstChange then
+            selectorVisible = true
+            selectorFirstChange = false
+            updateSelectedWeapon()
+        else
+            selectorWeaponIndex = selectorWeaponIndex - 1
+            if selectorWeaponIndex < 1 then
+                selectorSlot = selectorSlot - 1
+                if selectorSlot < 1 then selectorSlot = #activeSlots end
+                selectorWeaponIndex = #activeSlots[selectorSlot].Weapons
+            end
+        end
+        surface.PlaySound("millenium_hud/click2.wav")
+    elseif string.find(bind, "attack") and not string.find(bind, "attack2") then
+        if selectorVisible then
+            local selectedWeapon = activeSlots[selectorSlot] and activeSlots[selectorSlot].Weapons[selectorWeaponIndex]
+            if selectedWeapon then
+                RunConsoleCommand("use", selectedWeapon:GetClass())
+                surface.PlaySound("millenium_hud/click.wav")
+            end
+            selectorVisible = false
+            selectorFirstChange = true
+            alphaValue = 0
+            return true
+        end
+    end
+end)
+
+
+hook.Add("Think", "millenium.ws.updateSlots", function()
+    if LocalPlayer():KeyPressed(IN_ATTACK) then
+        attackHeld = true
+    elseif LocalPlayer():KeyReleased(IN_ATTACK) then
+        attackHeld = false
+    end
+    Slots = populateSlots()
+    updateActiveSlots()
+end)

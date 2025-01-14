@@ -43,6 +43,7 @@ local function createPlayerPanel( ply, parent, height )
     button.DefaultAlpha = 30
     button.HoveredAlpha = 100
     button.CurAlpha = button.DefaultAlpha
+    button.SoundPlayed = false
     button.Paint = function (me, w, h)
         local gradient = Material("gui/gradient_up")
         local color = PlayerTeamColor
@@ -57,8 +58,13 @@ local function createPlayerPanel( ply, parent, height )
 
         if me:IsHovered() then
             button.CurAlpha = Lerp(FrameTime() * animationSmooth, button.CurAlpha, button.HoveredAlpha)
+            if not me.SoundPlayed then
+                surface.PlaySound("millenium_hud/click2.wav")
+                me.SoundPlayed = true
+            end
         else
             button.CurAlpha = Lerp(FrameTime() * animationSmooth, button.CurAlpha, button.DefaultAlpha)
+            me.SoundPlayed = false
         end
 
         surface.SetDrawColor(color)
@@ -80,6 +86,8 @@ local function createPlayerPanel( ply, parent, height )
             panel:SizeTo(panel:GetWide(), panel.ClosedHeight, 1, 0, .1)
         end
         panel.Closed = not panel.Closed
+        -- surface.PlaySound("ambient/water/rain_drip1.wav")
+        surface.PlaySound("millenium_hud/click.wav")
     end
 end
 
@@ -192,3 +200,5 @@ hook.Add("ScoreboardHide", "millenium.scoreboard.hide", function()
         end)
     end
 end)
+
+mi_hud:Log("[Scoreboard] Загружен")

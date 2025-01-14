@@ -1,8 +1,10 @@
 surface.CreateFont("mi.hud.6", {font = "Montserrat", extended = true, size = ScreenScale(6.5), antialias = true})
 surface.CreateFont("mi.hud.6.shadow", {font = "Montserrat", extended = true, blursize = 2, size = ScreenScale(6.5), antialias = true})
-surface.CreateFont("mi.hud.10", {font = "Montserrat", extended = true, size = ScreenScale(6.5), antialias = true})
+surface.CreateFont("mi.hud.25", {font = "Montserrat", extended = true, size = 25, antialias = true})
 surface.CreateFont("mi.hud.45", {font = "Montserrat Bold", extended = true, size = 45, antialias = true})
 surface.CreateFont("mi.hud.72", {font = "Montserrat Bold", extended = true, size = 72, antialias = true})
+surface.CreateFont("mi.hud.120", {font = "Montserrat Bold", extended = true, size = 120, antialias = true})
+surface.CreateFont("mi.hud.140", {font = "Montserrat Bold", extended = true, size = 140, antialias = true})
 surface.CreateFont("mi.hud.watermark.top", {font = "Montserrat Black", extended = true, size = ScreenScale(7), antialias = true})
 surface.CreateFont("mi.hud.watermark.bottom", {font = "Montserrat", extended = true, size = ScreenScale(6), antialias = true})
 
@@ -48,3 +50,6 @@ hook.Add("HUDShouldDraw", "HideDefaultHud", function(name)
         return false
     end
 end)
+
+mi_hud:Log("[Interface] Загружен")
+

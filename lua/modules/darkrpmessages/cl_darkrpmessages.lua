@@ -60,3 +60,5 @@ net.Receive("ShowDarkRPMessage", function()
     local text = net.ReadString()
     addMessageToQueue(text)
 end)
+
+mi_hud:Log("[DarkRP Messages] Загружен")

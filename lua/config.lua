@@ -21,6 +21,7 @@ mi_hud.config = {
         ["DarkRP_ArrestedHUD"] = true,
         ["DarkRP_ChatReceivers"] = true,
         ["DarkRP_Hungermod"] = true,
+        ["CHudWeaponSelection"] = true
     }
 }
 
