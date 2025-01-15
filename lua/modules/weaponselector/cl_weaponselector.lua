@@ -106,11 +106,11 @@ hook.Add("DrawOverlay", "millenium.ws.draw", function()
 
         local alpha = (index == selectorSlot) and alphaValue or math.max(100, alphaValue / 10)
 
-        draw.RoundedBox(0, startX, startY, slotSize, slotSize, Color(mi_hud.theme.baseOutline.r, mi_hud.theme.baseOutline.g, mi_hud.theme.baseOutline.b, alpha))
-        draw.RoundedBox(0, startX + 1, startY + 1, slotSize - 2, slotSize - 2, Color(mi_hud.theme.base.r, mi_hud.theme.base.g, mi_hud.theme.base.b, alpha))
+        draw.RoundedBox(mi_hud.rounding, startX, startY, slotSize, slotSize, Color(mi_hud.theme.baseOutline.r, mi_hud.theme.baseOutline.g, mi_hud.theme.baseOutline.b, alpha))
+        draw.RoundedBox(mi_hud.rounding, startX + 1, startY + 1, slotSize - 2, slotSize - 2, Color(mi_hud.theme.base.r, mi_hud.theme.base.g, mi_hud.theme.base.b, alpha))
 
         if index == selectorSlot then
-            draw.RoundedBox(0, startX, startY, slotSize, slotSize, Color(mi_hud.theme.accent.r, mi_hud.theme.accent.g, mi_hud.theme.accent.b, alpha))
+            draw.RoundedBox(mi_hud.rounding, startX, startY, slotSize, slotSize, Color(mi_hud.theme.accent.r, mi_hud.theme.accent.g, mi_hud.theme.accent.b, alpha))
         end
 
         draw.SimpleText(index, "mi.ws.slot", startX + slotSize / 2, startY + slotSize / 2, Color(255, 255, 255, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
@@ -138,11 +138,11 @@ hook.Add("DrawOverlay", "millenium.ws.draw", function()
         local panelY = activeSlots[selectorSlot].PosY
 
         for weaponIndex, weapon in ipairs(activeSlots[selectorSlot].Weapons) do
-            draw.RoundedBox(0, panelX, panelY, panelW, panelH, mi_hud.theme.baseOutline)
-            draw.RoundedBox(0, panelX + 1, panelY + 1, panelW - 2, panelH - 2, mi_hud.theme.base)
+            draw.RoundedBox(mi_hud.rounding, panelX, panelY, panelW, panelH, mi_hud.theme.baseOutline)
+            draw.RoundedBox(mi_hud.rounding, panelX + 1, panelY + 1, panelW - 2, panelH - 2, mi_hud.theme.base)
 
             if selectorWeaponIndex == weaponIndex then
-                draw.RoundedBox(0, panelX, panelY, panelW, panelH, mi_hud.theme.accent)
+                draw.RoundedBox(mi_hud.rounding, panelX, panelY, panelW, panelH, mi_hud.theme.accent)
             end
 
             draw.SimpleText(weapon:GetPrintName(), "mi.ws.weapon", panelX + 10, panelY + panelH / 2, Color(255, 255, 255, alphaValue), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)

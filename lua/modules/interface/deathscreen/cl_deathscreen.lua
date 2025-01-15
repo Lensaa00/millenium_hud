@@ -26,6 +26,7 @@ function mi_hud.DeathScreen()
 
     local Player = LocalPlayer()
     local PDeathTime = Player:GetNWInt("DeathTime")
+    local PDeathText = "Вы мертвы!"
 
     surface.SetFont("DeathScreen.Main")
     local tw, th = surface.GetTextSize("Вы мертвы")
@@ -41,8 +42,8 @@ function mi_hud.DeathScreen()
 
     local timeLeft = math.Round(GAMEMODE.Config.respawntime - (CurTime() - PDeathTime))
 
-    draw.SimpleText("Вы мертвы!", "DeathScreen.Main.Shadow", panelX, panelY, Color(0,0,0), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    draw.SimpleText("Вы мертвы!", "DeathScreen.Main", panelX, panelY, Color(255,162,162), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    draw.SimpleText(PDeathText, "DeathScreen.Main.Shadow", panelX, panelY, Color(0,0,0), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    draw.SimpleText(PDeathText, "DeathScreen.Main", panelX, panelY, Color(255,162,162), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
 
     if timeLeft >= 0 then

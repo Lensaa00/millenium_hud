@@ -35,6 +35,8 @@ function mi_hud.elements:Main()
 
     local Time = os.date("%H:%M") -- Текущее время
 
+    draw.SimpleText("Здоровье: " .. PHealth .. "\nМакс. Здоровье: " .. PMaxHealth .. "\nБроня: " .. PArmor .. "\nМакс. Броня: " .. PMaxArmor, "DermaDefault", 5, 5, color_white)
+
     SmoothedHealth = Lerp(FrameTime() * 5, SmoothedHealth, PHealth)
     SmoothedArmor = Lerp(FrameTime() * 5, SmoothedArmor, PArmor)
 

@@ -101,8 +101,8 @@ local function Draw2D3DDoor(door)
     local function drawDoor()
         draw.SimpleText(doorHeader, "mi.doors.header.shadow", DoorData.canvasWidth / 2, 1, Color(0,0,0), TEXT_ALIGN_CENTER)
         draw.SimpleText(doorSubHeader, "mi.doors.subheader.shadow", DoorData.canvasWidth / 2, 50 * 1 + 1, Color(0,0,0), TEXT_ALIGN_CENTER)
-        draw.SimpleText(doorHeader, "mi.doors.header", DoorData.canvasWidth / 2, 0, color_white, TEXT_ALIGN_CENTER)
-        draw.SimpleText(doorSubHeader, "mi.doors.subheader", DoorData.canvasWidth / 2, 50 * 1, color_white, TEXT_ALIGN_CENTER)
+        draw.SimpleText(doorHeader, "mi.doors.header", DoorData.canvasWidth / 2, 0, Color(255,255,255), TEXT_ALIGN_CENTER)
+        draw.SimpleText(doorSubHeader, "mi.doors.subheader", DoorData.canvasWidth / 2, 50 * 1, Color(255,255,255), TEXT_ALIGN_CENTER)
     end
 
     cam.Start3D()
