@@ -1,6 +1,7 @@
 mi_hud.config = {}
 mi_hud.icons = {}
 mi_hud.theme = {}
+mi_hud.ammo = {}
 mi_hud.scoreboard = {}
 mi_hud.rounding = 0
 mi_hud.drawDistance = 150
@@ -21,8 +22,26 @@ mi_hud.config = {
         ["DarkRP_ArrestedHUD"] = true,
         ["DarkRP_ChatReceivers"] = true,
         ["DarkRP_Hungermod"] = true,
-        ["CHudWeaponSelection"] = true
+        ["CHudWeaponSelection"] = true,
+        ["CHudAmmo"] = true,
     }
+}
+
+mi_hud.ammo.blacklist = {
+    ["weapon_physgun"] = true,
+    ["weapon_physcannon"] = true,
+    ["weapon_fists"] = true,
+    ["keys"] = true,
+    ["itemstore_pickup"] = true,
+    ["gmod_tool"] = true,
+    ["weapon_rpt_handcuff"] = true,
+    ["unarrest_stick"] = true,
+    ["weaponchecker"] = true,
+    ["door_ram"] = true,
+    ["weapon_uni_cracker"] = true,
+    ["lockpick"] = true,
+    ["med_kit"] = true,
+
 }
 
 

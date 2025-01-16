@@ -3,6 +3,10 @@ surface.CreateFont("mi.hud.time", {font = "Montserrat Bold", extended = true, si
 surface.CreateFont("mi.hud.hunger", {font = "Montserrat", extended = true, size = ScreenScale(10), antialias = true})
 surface.CreateFont("mi.hud.text", {font = "Montserrat", extended = true, size = ScreenScale(8.5), antialias = true})
 surface.CreateFont("mi.hud.text.shadow", {font = "Montserrat", extended = true, blursize = 2, size = ScreenScale(8.5), antialias = true})
+surface.CreateFont("mi.hud.ammoBig", {font = "Montserrat Bold", extended = true, size = ScreenScale(18), antialias = true})
+surface.CreateFont("mi.hud.ammoSmall", {font = "Montserrat", extended = true, size = ScreenScale(12), antialias = true})
+surface.CreateFont("mi.hud.ammoBig.shadow", {font = "Montserrat Bold", extended = true, size = ScreenScale(18), blursize = 2, antialias = true})
+surface.CreateFont("mi.hud.ammoSmall.shadow", {font = "Montserrat", extended = true, size = ScreenScale(12), blursize = 2, antialias = true})
 
 local SmoothedHealth = 100
 local SmoothedArmor = 100
@@ -16,8 +20,9 @@ function mi_hud.elements:Main()
     -- Размеры экрана
     local scrw, scrh = ScrW(), ScrH()
 
-    -- Опорная точка
+    -- Опорные точки
     local pivotlx, pivotly = ScreenScale(6), scrh - ScreenScale(1)
+    local pivotrx, pivotry = scrw - scrw * .09, scrh - scrh * .03
 
     -- Ширина полосы
     local barWidth = scrw * 0.15
@@ -32,6 +37,10 @@ function mi_hud.elements:Main()
     local PSalary = DarkRP.formatMoney(Player:getDarkRPVar("salary")) -- DarkRP Зарплата
     local PJob = Player:getDarkRPVar("job") -- DarkRP Работа
     local PHasLicense = Player:getDarkRPVar("HasGunlicense") -- Флаг лицензии
+
+    local PWeapon = Player:GetActiveWeapon()
+    local PClip1Ammo = PWeapon:Clip1()
+    local PTotalAmmo = Player:GetAmmoCount(PWeapon:GetPrimaryAmmoType()) or 0
 
     local Time = os.date("%H:%M") -- Текущее время
 
@@ -117,5 +126,26 @@ function mi_hud.elements:Main()
         -- Текст
         draw.SimpleText("Есть лицензия", "mi.hud.text.shadow", pivotlx + scrw * .02, pivotly - scrh * .128 + 2, Color(0,0,0, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
         draw.SimpleText("Есть лицензия", "mi.hud.text", pivotlx + scrw * .02, pivotly - scrh * .128, Color(255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    end
+
+    if IsValid(PWeapon) then
+        if (mi_hud.ammo.blacklist[PWeapon:GetClass()] == true) then return end
+
+        surface.SetFont("mi.hud.ammoBig")
+        local bigW, bigH = surface.GetTextSize(PClip1Ammo)
+        surface.SetFont("mi.hud.ammoSmall")
+        local smallW, smallH = surface.GetTextSize(PTotalAmmo)
+
+        local panelGap = 5
+        local panelPadding = 20
+        local panelW = bigW + smallW + panelGap + panelPadding
+        local panelH = (bigH > smallH) and bigH or smallH
+
+        -- draw.RoundedBox(mi_hud.rounding, pivotrx - panelPadding / 2, pivotry - panelH, panelW, panelH, mi_hud.theme.base)
+
+        draw.SimpleText(PClip1Ammo, "mi.hud.ammoBig.shadow", pivotrx, pivotry + 2, Color(0,0,0), TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
+        draw.SimpleText(PTotalAmmo, "mi.hud.ammoSmall.shadow", pivotrx + bigW + panelGap, pivotry - 6 + 2, Color(0,0,0), TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
+        draw.SimpleText(PClip1Ammo, "mi.hud.ammoBig", pivotrx, pivotry, Color(255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
+        draw.SimpleText(PTotalAmmo, "mi.hud.ammoSmall", pivotrx + bigW + panelGap, pivotry - 6, Color(255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
     end
 end
